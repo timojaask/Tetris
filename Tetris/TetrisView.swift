@@ -14,20 +14,47 @@ class TetrisView: UIView {
     private var margin: CGFloat = 2.0
     
     private var mainColor = UIColor.black
+
+    @IBInspectable var gridColor: UIColor = UIColor.gray {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
     private var panOriginX: CGFloat?
     
-    private var fieldWidth = 15
+    private var fieldWidth: Int {
+        return Int(bounds.width / (blockSize + margin)) - 1
+    }
     
-    
-//    @IBInspectable var scale: CGFloat = 0.9 {
-//        didSet {
-//            setNeedsDisplay()
-//        }
-//    }
+    private var fieldHeight: Int {
+        return Int(bounds.height / (blockSize + margin)) - 1
+    }
     
     private var currentFigure: [Block] = [Block(x: 4, y: 5), Block(x: 5, y: 5), Block(x: 6, y: 5), Block(x:5, y: 6)]
     
+    
+    private func drawGrid() {
+        gridColor.setStroke()
+        
+        let maxX = CGFloat(fieldWidth) * (blockSize + margin)
+        let maxY = CGFloat(fieldHeight) * (blockSize + margin)
+        
+        for i in 0...fieldWidth {
+            let line = UIBezierPath()
+            let x = CGFloat(i) * (blockSize + margin) - 1
+            line.move(to: CGPoint(x: x, y: 0.0))
+            line.addLine(to: CGPoint(x: x, y: maxY))
+            line.stroke()
+        }
+        for i in 0...fieldHeight {
+            let line = UIBezierPath()
+            let y = CGFloat(i) * (blockSize + margin) - 1
+            line.move(to: CGPoint(x: 0.0, y: y))
+            line.addLine(to: CGPoint(x: maxX, y: y))
+            line.stroke()
+        }
+    }
     
     private func drawBlock(block: Block) {
         let x = bounds.minX + CGFloat(block.positionX) * (blockSize + margin)
@@ -41,6 +68,7 @@ class TetrisView: UIView {
     }
     
     override func draw(_ rect: CGRect) {
+        drawGrid()
         
         for block in currentFigure {
             drawBlock(block: block)
@@ -50,7 +78,7 @@ class TetrisView: UIView {
     func moveCurrentFigure(steps: Int) {
         for block in currentFigure {
             let newPosition = block.positionX + steps
-            if newPosition < 0 || newPosition > fieldWidth {
+            if newPosition < 0 || newPosition >= fieldWidth {
                 return
             }
         }
@@ -70,7 +98,6 @@ class TetrisView: UIView {
             panOriginX = start.location(in: self).x
             print("Began \(panOriginX)")
         }
-
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
