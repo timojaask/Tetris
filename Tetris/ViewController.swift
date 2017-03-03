@@ -10,7 +10,11 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var tetris: TetrisView!
-        
+    
+    @IBAction func dropFigure(_ sender: UISwipeGestureRecognizer) {
+        tetris.dropFigure()
+    }
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }

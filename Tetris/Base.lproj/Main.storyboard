@@ -29,6 +29,9 @@
                                         <color key="value" red="0.84898546006944442" green="0.84898546006944442" blue="0.84898546006944442" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="XRH-uR-wbe" appends="YES" id="Htv-Fl-aXQ"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -44,6 +47,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="down" id="XRH-uR-wbe">
+                    <connections>
+                        <action selector="dropFigure:" destination="BYZ-38-t0r" id="8Cb-nw-dhx"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-19" y="75"/>
         </scene>

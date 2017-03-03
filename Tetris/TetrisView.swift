@@ -12,7 +12,7 @@ import UIKit
 class TetrisView: UIView {
     private var blockSize: CGFloat = 20.0
     private var margin: CGFloat = 2.0
-    
+
     private var mainColor = UIColor.black
 
     @IBInspectable var gridColor: UIColor = UIColor.gray {
@@ -89,6 +89,20 @@ class TetrisView: UIView {
         setNeedsDisplay()
     }
     
+    func dropFigure() {
+        print ("Drop")
+        // Simple code for now
+        var lowestPoint = 0
+        for block in currentFigure {
+            lowestPoint = max(lowestPoint, block.positionY)
+        }
+        let distance = fieldHeight - lowestPoint - 1
+        for block in currentFigure {
+            block.positionY += distance
+        }
+        setNeedsDisplay()
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if touches.count > 1 {
             return
@@ -117,7 +131,7 @@ class TetrisView: UIView {
             }
         }
     }
-
+    
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         panOriginX = nil
     }
