@@ -120,7 +120,7 @@ class TetrisView: UIView {
     private func tryToMoveCurrentFigureDown() -> Bool {
         for block in currentFigure {
             let newPositionY = block.positionY + 1
-            if newPositionY == (fieldHeight - 1) {
+            if newPositionY == fieldHeight {
                 return false
             }
             
