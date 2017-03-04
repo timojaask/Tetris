@@ -59,7 +59,7 @@ class ViewController: UIViewController {
             let steps = Int(horizontalDistance / tetris.blockSize / 0.6)
             if steps != 0 {
                 field.tryToSlide(steps: steps)
-                sender.setTranslation(CGPoint(x: 0.0, y: 0.0), in: tetris)
+                sender.setTranslation(CGPoint.zero, in: tetris)
             }
         default:
             break
