@@ -38,7 +38,7 @@ class Field {
                     canMove = false
                     break
                 }
-                if oldFigures.contains(where: { return $0.positionX == newPositionX && $0.positionY == block.positionY } ) {
+                if oldFigures.contains(Block(x:newPositionX, y:block.positionY)) {
                     canMove = false
                     break
                 }
@@ -46,6 +46,8 @@ class Field {
             
             if canMove {
                 stepsToMove = step
+            } else {
+                break
             }
         }
         
@@ -76,10 +78,8 @@ class Field {
                 return false
             }
             
-            for oldBlock in oldFigures {
-                if oldBlock.positionX == block.positionX && oldBlock.positionY == newPositionY {
-                    return false
-                }
+            if oldFigures.contains(Block(x: block.positionX, y: newPositionY)) {
+                return false
             }
         }
         
@@ -93,7 +93,9 @@ class Field {
     }
     
     private func spawnFigure() {
-        oldFigures += currentFigure
+        for block in currentFigure {
+            oldFigures.insert(block)
+        }
         currentFigure = [Block(x: 4, y: 5), Block(x: 5, y: 5), Block(x: 6, y: 5), Block(x:5, y: 6)]
         modelChanged()
     }
@@ -104,5 +106,5 @@ class Field {
     
     private(set) var currentFigure: [Block] = []
     
-    private(set) var oldFigures: [Block] = []
+    private(set) var oldFigures = Set<Block>()
 }

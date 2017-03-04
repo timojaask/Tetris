@@ -6,10 +6,18 @@
 //  Copyright © 2017 Andy. All rights reserved.
 //
 
-class Block {
+class Block : Hashable {
     init(x: Int, y: Int) {
         positionX = x
         positionY = y
+    }
+    
+    var hashValue: Int {
+        return positionX.hashValue & positionY.hashValue
+    }
+    
+    static func == (left: Block, right: Block) -> Bool {
+        return left.positionX == right.positionX && left.positionY == right.positionY
     }
     
     var positionX: Int
