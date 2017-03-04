@@ -33,6 +33,9 @@ class TetrisView: UIView {
     
     private var currentFigure: [Block] = [Block(x: 4, y: 5), Block(x: 5, y: 5), Block(x: 6, y: 5), Block(x:5, y: 6)]
     
+    private var oldFigures: [Block] = []
+    
+    var timer = Timer()
     
     private func drawGrid() {
         gridColor.setStroke()
@@ -70,37 +73,88 @@ class TetrisView: UIView {
     override func draw(_ rect: CGRect) {
         drawGrid()
         
-        for block in currentFigure {
+        for block in currentFigure + oldFigures {
             drawBlock(block: block)
         }
     }
+
     
-    func moveCurrentFigure(steps: Int) {
-        for block in currentFigure {
-            let newPosition = block.positionX + steps
-            if newPosition < 0 || newPosition >= fieldWidth {
-                return
+    private func moveCurrentFigure(steps: Int) {
+        var stepsToMove = 0
+        
+        
+        for i in 1...abs(steps) {
+            let step = i * (steps > 0 ? 1 : -1)
+            
+            var canMove = true
+            
+            for block in currentFigure {
+                let newPositionX = block.positionX + step
+                if newPositionX < 0 || newPositionX >= fieldWidth {
+                    canMove = false
+                    break
+                }
+                if oldFigures.contains(where: { return $0.positionX == newPositionX && $0.positionY == block.positionY } ) {
+                    canMove = false
+                    break
+                }
+            }
+            
+            if canMove {
+                stepsToMove = step
             }
         }
         
         for block in currentFigure {
-            block.positionX += steps
+            block.positionX += stepsToMove
         }
         setNeedsDisplay()
+    }
+    
+    private func spawnAnotherFigure() {
+        oldFigures += currentFigure
+        currentFigure = [Block(x: 4, y: 5), Block(x: 5, y: 5), Block(x: 6, y: 5), Block(x:5, y: 6)]
+        setNeedsDisplay()
+    }
+    
+    private func tryToMoveCurrentFigureDown() -> Bool {
+        for block in currentFigure {
+            let newPositionY = block.positionY + 1
+            if newPositionY == (fieldHeight - 1) {
+                return false
+            }
+            
+            for oldBlock in oldFigures {
+                if oldBlock.positionX == block.positionX && oldBlock.positionY == newPositionY {
+                    return false
+                }
+            }
+        }
+        
+        for block in currentFigure {
+            block.positionY += 1
+        }
+        
+        return true
     }
     
     func dropFigure() {
         print ("Drop")
         // Simple code for now
-        var lowestPoint = 0
-        for block in currentFigure {
-            lowestPoint = max(lowestPoint, block.positionY)
+        while tryToMoveCurrentFigureDown() {
         }
-        let distance = fieldHeight - lowestPoint - 1
-        for block in currentFigure {
-            block.positionY += distance
-        }
+        
         setNeedsDisplay()
+    }
+    
+    func moveDown() {
+        print("Move")
+        
+        if tryToMoveCurrentFigureDown() {
+            setNeedsDisplay()
+        } else {
+            spawnAnotherFigure()
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
