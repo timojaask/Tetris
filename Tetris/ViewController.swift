@@ -51,27 +51,16 @@ class ViewController: UIViewController {
         field.moveDown()
     }
     
-    private var panOriginX: CGFloat?
-    
     @IBAction func slideFigure(_ sender: UIPanGestureRecognizer) {
         switch sender.state {
-        case UIGestureRecognizerState.began:
-            panOriginX = 0
         case UIGestureRecognizerState.changed:
-            if panOriginX == nil {
-                return
-            }
+            let horizontalDistance = sender.translation(in: tetris).x
             
-            let currentX = sender.translation(in: tetris).x
-            let difference = currentX - panOriginX!
-            
-            let steps = Int(difference / tetris.blockSize / 0.6)
+            let steps = Int(horizontalDistance / tetris.blockSize / 0.6)
             if steps != 0 {
-                panOriginX = currentX
                 field.tryToSlide(steps: steps)
+                sender.setTranslation(CGPoint(x: 0.0, y: 0.0), in: tetris)
             }
-        case UIGestureRecognizerState.ended:
-            panOriginX = nil
         default:
             break
         }
