@@ -17,10 +17,10 @@ class Field {
     
     var width = 12
     var height = 20
-    
-    func spawnFigure() {
-        oldFigures += currentFigure
-        currentFigure = [Block(x: 4, y: 5), Block(x: 5, y: 5), Block(x: 6, y: 5), Block(x:5, y: 6)]
+
+    func reset() {
+        spawnFigure()
+        oldFigures = []
         modelChanged()
     }
     
@@ -90,6 +90,12 @@ class Field {
         modelChanged()
         
         return true
+    }
+    
+    private func spawnFigure() {
+        oldFigures += currentFigure
+        currentFigure = [Block(x: 4, y: 5), Block(x: 5, y: 5), Block(x: 6, y: 5), Block(x:5, y: 6)]
+        modelChanged()
     }
     
     private func modelChanged() {

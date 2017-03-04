@@ -77,6 +77,10 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func reset(_ sender: Any) {
+        field.reset()
+    }
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
