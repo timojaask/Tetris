@@ -72,16 +72,20 @@ class Field {
     }
     
     func rotateFigure() {
+        if currentFigureCenter == nil {
+            return
+        }
+        
         for block in currentFigure {
             if block == currentFigureCenter {                
                 continue
             }
             
-            let xDifference = currentFigureCenter.positionX - block.positionX
-            let yDifference = currentFigureCenter.positionY - block.positionY
+            let xDifference = currentFigureCenter!.positionX - block.positionX
+            let yDifference = currentFigureCenter!.positionY - block.positionY
             
-            block.positionX = currentFigureCenter.positionX + yDifference
-            block.positionY = currentFigureCenter.positionY - xDifference
+            block.positionX = currentFigureCenter!.positionX + yDifference
+            block.positionY = currentFigureCenter!.positionY - xDifference
         }
         
         modelChanged()
@@ -108,12 +112,58 @@ class Field {
         return true
     }
     
+    enum Shape: UInt32 {
+        case S = 0
+        case ReverseS
+        case Beam
+        case Square
+        case Tee
+    }
+    
     private func spawnFigure() {
         for block in currentFigure {
             oldFigures.insert(block)
         }
-        currentFigureCenter = Block(x: 5, y: 5)
-        currentFigure = [Block(x: 4, y: 5), currentFigureCenter, Block(x: 6, y: 5), Block(x:5, y: 6)]
+        
+        let shapeIndex = arc4random_uniform(Shape.Tee.rawValue+1)
+        let centerX = width / 2 - 1
+        let centerY = 1
+        if let shape = Shape(rawValue: shapeIndex) {
+            switch shape
+            {
+            case .S:
+                currentFigureCenter = Block(x: centerX, y: centerY)
+                currentFigure = [currentFigureCenter!,
+                                 Block(x: centerX, y: centerY-1),
+                                 Block(x: centerX+1, y: centerY),
+                                 Block(x: centerX+1, y: centerY+1)]
+            case .ReverseS:
+                currentFigureCenter = Block(x: centerX, y: centerY)
+                currentFigure = [currentFigureCenter!,
+                                 Block(x: centerX+1, y: centerY-1),
+                                 Block(x: centerX+1, y: centerY),
+                                 Block(x: centerX, y: centerY+1)]
+            case .Beam:
+                currentFigureCenter = Block(x: centerX, y: centerY)
+                currentFigure = [currentFigureCenter!,
+                                 Block(x: centerX, y: centerY-1),
+                                 Block(x: centerX, y: centerY+1),
+                                 Block(x: centerX, y: centerY+2)]
+            case .Square:
+                currentFigureCenter = nil
+                currentFigure = [Block(x: centerX, y: centerY),
+                                 Block(x: centerX+1, y: centerY-1),
+                                 Block(x: centerX+1, y: centerY),
+                                 Block(x: centerX, y: centerY-1)]
+            case .Tee:
+                currentFigureCenter = Block(x: centerX, y: centerY)
+                currentFigure = [currentFigureCenter!,
+                                 Block(x: centerX-1, y: centerY),
+                                 Block(x: centerX, y: centerY-1),
+                                 Block(x: centerX+1, y: centerY)]
+            }
+        }
+        
         modelChanged()
     }
     
@@ -122,7 +172,7 @@ class Field {
     }
     
     private(set) var currentFigure: [Block] = []
-    private var currentFigureCenter: Block = Block(x: 0, y: 0)
+    private var currentFigureCenter: Block? = nil
     
     private(set) var oldFigures = Set<Block>()
 }
