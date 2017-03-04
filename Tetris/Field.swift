@@ -71,6 +71,22 @@ class Field {
         }
     }
     
+    func rotateFigure() {
+        for block in currentFigure {
+            if block == currentFigureCenter {                
+                continue
+            }
+            
+            let xDifference = currentFigureCenter.positionX - block.positionX
+            let yDifference = currentFigureCenter.positionY - block.positionY
+            
+            block.positionX = currentFigureCenter.positionX + yDifference
+            block.positionY = currentFigureCenter.positionY - xDifference
+        }
+        
+        modelChanged()
+    }
+    
     private func tryToMoveCurrentFigureDown() -> Bool {
         for block in currentFigure {
             let newPositionY = block.positionY + 1
@@ -96,7 +112,8 @@ class Field {
         for block in currentFigure {
             oldFigures.insert(block)
         }
-        currentFigure = [Block(x: 4, y: 5), Block(x: 5, y: 5), Block(x: 6, y: 5), Block(x:5, y: 6)]
+        currentFigureCenter = Block(x: 5, y: 5)
+        currentFigure = [Block(x: 4, y: 5), currentFigureCenter, Block(x: 6, y: 5), Block(x:5, y: 6)]
         modelChanged()
     }
     
@@ -105,6 +122,7 @@ class Field {
     }
     
     private(set) var currentFigure: [Block] = []
+    private var currentFigureCenter: Block = Block(x: 0, y: 0)
     
     private(set) var oldFigures = Set<Block>()
 }

@@ -66,6 +66,10 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func rotateFigure(_ sender: Any) {
+        field.rotateFigure()
+    }
+    
     @IBAction func reset(_ sender: Any) {
         field.reset()
     }

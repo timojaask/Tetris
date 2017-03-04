@@ -34,6 +34,7 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="gridColor">
                                         <color key="value" red="0.84898546006944442" green="0.84898546006944442" blue="0.84898546006944442" alpha="1" colorSpace="calibratedRGB"/>
@@ -42,6 +43,7 @@
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="XRH-uR-wbe" appends="YES" id="Htv-Fl-aXQ"/>
                                     <outletCollection property="gestureRecognizers" destination="aVt-Wi-Ryy" appends="YES" id="PFI-qD-5p4"/>
+                                    <outletCollection property="gestureRecognizers" destination="xoB-Ws-86q" appends="YES" id="6if-IY-yfa"/>
                                 </connections>
                             </view>
                         </subviews>
@@ -70,6 +72,11 @@
                         <action selector="slideFigure:" destination="BYZ-38-t0r" id="nSY-iN-XB4"/>
                     </connections>
                 </panGestureRecognizer>
+                <tapGestureRecognizer id="xoB-Ws-86q">
+                    <connections>
+                        <action selector="rotateFigure:" destination="BYZ-38-t0r" id="tCe-bw-HBb"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-19" y="75"/>
         </scene>
