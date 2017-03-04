@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        timer = Timer.scheduledTimer(timeInterval: stepInterval, target:self, selector: #selector(ViewController.moveDown), userInfo: nil, repeats: true)
+        toggleTimer()
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.updateUI), name: NSNotification.Name(rawValue: Field.modelUpdateNotification), object: nil)
         panGestureRecognizer.require(toFail: swipeGestureRecognizer)
     }
@@ -72,6 +72,17 @@ class ViewController: UIViewController {
     
     @IBAction func reset(_ sender: Any) {
         field.reset()
+        if !timer.isValid {
+            toggleTimer()
+        }
+    }
+    
+    @IBAction func toggleTimer() {
+        if timer.isValid {
+            timer.invalidate()
+        } else {
+            timer = Timer.scheduledTimer(timeInterval: stepInterval, target:self, selector: #selector(ViewController.moveDown), userInfo: nil, repeats: true)
+        }
     }
     
     override var prefersStatusBarHidden: Bool {
