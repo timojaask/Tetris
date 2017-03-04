@@ -6,8 +6,6 @@
 //  Copyright © 2017 Andy. All rights reserved.
 //
 
-import CoreGraphics
-
 class Block {
     init(x: Int, y: Int) {
         positionX = x

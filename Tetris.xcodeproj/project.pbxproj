@@ -14,6 +14,7 @@
 		DA9124E81E5F18B100403576 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA9124E61E5F18B100403576 /* LaunchScreen.storyboard */; };
 		DA9124F11E5F19A300403576 /* TetrisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9124F01E5F19A300403576 /* TetrisView.swift */; };
 		DA9124F31E69BEC500403576 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9124F21E69BEC500403576 /* Block.swift */; };
+		DA9124F51E6AC89200403576 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9124F41E6AC89200403576 /* Field.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		DA9124E91E5F18B100403576 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA9124F01E5F19A300403576 /* TetrisView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetrisView.swift; sourceTree = "<group>"; };
 		DA9124F21E69BEC500403576 /* Block.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
+		DA9124F41E6AC89200403576 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				DA9124EF1E5F18C900403576 /* Stuff */,
 				DA9124DF1E5F18B100403576 /* ViewController.swift */,
 				DA9124F21E69BEC500403576 /* Block.swift */,
+				DA9124F41E6AC89200403576 /* Field.swift */,
 				DA9124F01E5F19A300403576 /* TetrisView.swift */,
 				DA9124E11E5F18B100403576 /* Main.storyboard */,
 			);
@@ -150,6 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA9124F51E6AC89200403576 /* Field.swift in Sources */,
 				DA9124F11E5F19A300403576 /* TetrisView.swift in Sources */,
 				DA9124F31E69BEC500403576 /* Block.swift in Sources */,
 				DA9124E01E5F18B100403576 /* ViewController.swift in Sources */,
@@ -315,6 +319,7 @@
 				DA9124EE1E5F18B100403576 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

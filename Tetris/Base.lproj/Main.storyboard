@@ -31,6 +31,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="XRH-uR-wbe" appends="YES" id="Htv-Fl-aXQ"/>
+                                    <outletCollection property="gestureRecognizers" destination="aVt-Wi-Ryy" appends="YES" id="PFI-qD-5p4"/>
                                 </connections>
                             </view>
                         </subviews>
@@ -43,6 +44,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="panGestureRecognizer" destination="aVt-Wi-Ryy" id="Hz2-bI-wCs"/>
+                        <outlet property="swipeGestureRecognizer" destination="XRH-uR-wbe" id="oOd-Iz-NDf"/>
                         <outlet property="tetris" destination="SW7-rg-vbC" id="jRP-bY-E2W"/>
                     </connections>
                 </viewController>
@@ -52,6 +55,11 @@
                         <action selector="dropFigure:" destination="BYZ-38-t0r" id="8Cb-nw-dhx"/>
                     </connections>
                 </swipeGestureRecognizer>
+                <panGestureRecognizer cancelsTouchesInView="NO" minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="aVt-Wi-Ryy">
+                    <connections>
+                        <action selector="slideFigure:" destination="BYZ-38-t0r" id="nSY-iN-XB4"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-19" y="75"/>
         </scene>
