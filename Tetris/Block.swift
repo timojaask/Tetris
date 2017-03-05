@@ -1,10 +1,5 @@
-//
-//  Block.swift
-//  Tetris
-//
 //  Created by Andy on 03/03/2017.
 //  Copyright © 2017 Andy. All rights reserved.
-//
 
 class Block : Hashable {
     init(x: Int, y: Int) {

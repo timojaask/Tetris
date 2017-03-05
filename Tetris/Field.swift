@@ -1,10 +1,5 @@
-//
-//  Field.swift
-//  Tetris
-//
 //  Created by Andy on 04/03/2017.
 //  Copyright © 2017 Andy. All rights reserved.
-//
 
 import Foundation
 
