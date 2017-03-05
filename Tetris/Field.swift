@@ -38,6 +38,9 @@ class Field: NSObject {
     }
 
     func reset() {
+        if inProgress() {
+            timer!.invalidate()
+        }
         spawnFigure()
         oldFigures = []
         modelChanged()
