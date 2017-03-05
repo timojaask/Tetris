@@ -23,10 +23,7 @@ class ViewController: UIViewController {
     
     @IBOutlet var swipeGestureRecognizer: UISwipeGestureRecognizer!
     @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
-    
-    private var stepInterval = 1.0
-    var timer = Timer()
-    
+        
     func updateUI() {
         tetris.fieldWidth = field.width
         tetris.fieldHeight = field.height
@@ -42,13 +39,9 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        toggleTimer()
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.updateUI), name: NSNotification.Name(rawValue: Field.modelUpdateNotification), object: nil)
         panGestureRecognizer.require(toFail: swipeGestureRecognizer)
-    }
-    
-    func moveDown() {
-        field.moveDown()
+        field.nextStep()
     }
     
     @IBAction func slideFigure(_ sender: UIPanGestureRecognizer) {
@@ -72,16 +65,13 @@ class ViewController: UIViewController {
     
     @IBAction func reset(_ sender: Any) {
         field.reset()
-        if !timer.isValid {
-            toggleTimer()
-        }
     }
     
-    @IBAction func toggleTimer() {
-        if timer.isValid {
-            timer.invalidate()
+    @IBAction func togglePause() {
+        if field.inProgress() {
+            field.pause()
         } else {
-            timer = Timer.scheduledTimer(timeInterval: stepInterval, target:self, selector: #selector(ViewController.moveDown), userInfo: nil, repeats: true)
+            field.nextStep()
         }
     }
     

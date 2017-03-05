@@ -8,8 +8,9 @@
 
 import Foundation
 
-class Field {
-    init() {
+class Field: NSObject {
+    override init() {
+        super.init()
         spawnFigure()
     }
 
@@ -17,11 +18,30 @@ class Field {
     
     var width = 12
     var height = 20
+    
+    private var stepInterval = 1.0
+    
+    private var timer: Timer? = nil
+    
+    func nextStep() {
+        timer = Timer.scheduledTimer(timeInterval: stepInterval, target:self, selector: #selector(Field.moveDown), userInfo: nil, repeats: false)
+    }
+    
+    func pause() {
+        if timer != nil {
+            timer!.invalidate()
+        }
+    }
+    
+    func inProgress() -> Bool {
+        return timer != nil && timer!.isValid
+    }
 
     func reset() {
         spawnFigure()
         oldFigures = []
         modelChanged()
+        nextStep()
     }
     
     func tryToSlide(steps: Int) {
@@ -65,12 +85,6 @@ class Field {
         }
     }
     
-    func moveDown() {
-        if !tryToMoveCurrentFigureDown() {
-            spawnFigure()
-        }
-    }
-    
     func rotateFigure() {
         if currentFigureCenter == nil {
             return
@@ -89,6 +103,13 @@ class Field {
         }
         
         modelChanged()
+    }
+    
+    @objc private func moveDown() {
+        if !tryToMoveCurrentFigureDown() {
+            spawnFigure()
+        }
+        nextStep()
     }
     
     private func tryToMoveCurrentFigureDown() -> Bool {
