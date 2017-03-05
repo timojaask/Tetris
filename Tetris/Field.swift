@@ -25,12 +25,14 @@ class Field: NSObject {
     
     func nextStep() {
         timer = Timer.scheduledTimer(timeInterval: stepInterval, target:self, selector: #selector(Field.moveDown), userInfo: nil, repeats: false)
+        modelChanged()
     }
     
     func pause() {
         if timer != nil {
             timer!.invalidate()
         }
+        modelChanged()
     }
     
     func inProgress() -> Bool {
@@ -43,8 +45,8 @@ class Field: NSObject {
         }
         spawnFigure()
         oldFigures = []
-        modelChanged()
         nextStep()
+        modelChanged()
     }
     
     func tryToSlide(steps: Int) {

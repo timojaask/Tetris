@@ -15,6 +15,8 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBOutlet weak var pauseButton: UIButton!
+    
     var field = Field() {
         didSet {
             updateUI()
@@ -32,6 +34,7 @@ class ViewController: UIViewController {
             let position = (x:block.positionX, y:block.positionY)
             tetris.takenPositions += [position]
         }
+        pauseButton.setTitle(field.inProgress() ? "Pause" : "Play", for: .normal)
     }
     
     @IBAction func dropFigure(_ sender: UISwipeGestureRecognizer) {
