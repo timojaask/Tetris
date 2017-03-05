@@ -90,7 +90,10 @@ class Field: NSObject {
             return
         }
         
-        for block in currentFigure {
+        let newFigure = currentFigure.map{ Block(x: $0.positionX, y: $0.positionY) }
+        let newFigureCenter = newFigure[currentFigure.index(of: currentFigureCenter!)!]
+        
+        for block in newFigure {
             if block == currentFigureCenter {                
                 continue
             }
@@ -100,7 +103,14 @@ class Field: NSObject {
             
             block.positionX = currentFigureCenter!.positionX + yDifference
             block.positionY = currentFigureCenter!.positionY - xDifference
+            
+            if oldFigures.contains(block) {
+                return
+            }
         }
+        
+        currentFigure = newFigure
+        currentFigureCenter = newFigureCenter
         
         modelChanged()
     }
