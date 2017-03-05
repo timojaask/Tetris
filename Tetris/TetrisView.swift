@@ -10,9 +10,11 @@ import UIKit
 
 @IBDesignable
 class TetrisView: UIView {
-    private(set) var blockSize: CGFloat = 20.0
-    private var margin: CGFloat = 2.0
-
+    var blockSize: CGFloat {
+        return fieldWidth != 0 ? floor(0.9 * bounds.width / CGFloat(fieldWidth) - 2*margin) : 0
+    }
+    private var margin: CGFloat = 1.0
+    
     private var mainColor = UIColor.black
     
     @IBInspectable var gridColor: UIColor = UIColor.gray {
@@ -21,10 +23,10 @@ class TetrisView: UIView {
         }
     }
         
-    var fieldHeight = 0
-    var fieldWidth = 0
+    var fieldHeight = 20
+    var fieldWidth = 12
     
-    var takenPositions: [(x:Int,y:Int)] = [(x:Int,y:Int)]() {
+    var takenPositions: [(x:Int,y:Int)] = [(4,5), (5,5), (6,5), (6,5)] {
         didSet {
             setNeedsDisplay()
         }
@@ -33,28 +35,36 @@ class TetrisView: UIView {
     private func drawGrid() {
         gridColor.setStroke()
         
-        let maxX = CGFloat(fieldWidth) * (blockSize + margin)
-        let maxY = CGFloat(fieldHeight) * (blockSize + margin)
+        let originX = (bounds.width - CGFloat(fieldWidth) * (blockSize + 2*margin))/2
+        let originY = (bounds.height - CGFloat(fieldHeight) * (blockSize + 2*margin))/2
+        
+        let maxX = originX + CGFloat(fieldWidth) * (blockSize + 2*margin)
+        let maxY = originY + CGFloat(fieldHeight) * (blockSize + 2*margin)
         
         for i in 0...fieldWidth {
             let line = UIBezierPath()
-            let x = CGFloat(i) * (blockSize + margin) - 1
-            line.move(to: CGPoint(x: x, y: 0.0))
+            line.lineWidth = margin
+            let x = originX + CGFloat(i) * (blockSize + 2*margin)
+            line.move(to: CGPoint(x: x, y: originY))
             line.addLine(to: CGPoint(x: x, y: maxY))
             line.stroke()
         }
         for i in 0...fieldHeight {
             let line = UIBezierPath()
-            let y = CGFloat(i) * (blockSize + margin) - 1
-            line.move(to: CGPoint(x: 0.0, y: y))
+            line.lineWidth = margin
+            let y = originY + CGFloat(i) * (blockSize + 2*margin)
+            line.move(to: CGPoint(x: originX, y: y))
             line.addLine(to: CGPoint(x: maxX, y: y))
             line.stroke()
         }
     }
     
     private func drawBlock(positionX: Int, positionY: Int) {
-        let x = bounds.minX + CGFloat(positionX) * (blockSize + margin)
-        let y = bounds.minY + CGFloat(positionY) * (blockSize + margin)
+        let originX = (bounds.width - CGFloat(fieldWidth) * (blockSize + 2*margin))/2
+        let originY = (bounds.height - CGFloat(fieldHeight) * (blockSize + 2*margin))/2
+        
+        let x = originX + bounds.minX + CGFloat(positionX) * (blockSize + 2*margin) + margin
+        let y = originY + bounds.minY + CGFloat(positionY) * (blockSize + 2*margin) + margin
         
         let outer = CGRect(x: x, y: y, width: blockSize, height: blockSize)
         let outerBlock = UIBezierPath(rect: outer)
