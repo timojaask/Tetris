@@ -104,7 +104,7 @@ class Field: NSObject {
             block.positionX = currentFigureCenter!.positionX + yDifference
             block.positionY = currentFigureCenter!.positionY - xDifference
             
-            if oldFigures.contains(block) {
+            if oldFigures.contains(block) || block.positionX < 0 || block.positionX >= width || block.positionY < 0 || block.positionY >= height {
                 return
             }
         }
