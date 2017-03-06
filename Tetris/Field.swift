@@ -53,12 +53,12 @@ class Field: NSObject {
             var canMove = true
             
             for block in currentFigure {
-                let newPositionX = block.positionX + step
-                if newPositionX < 0 || newPositionX >= width {
+                let newX = block.x + step
+                if newX < 0 || newX >= width {
                     canMove = false
                     break
                 }
-                if oldFigures.contains(Block(x:newPositionX, y:block.positionY)) {
+                if oldFigures.contains(Block(x:newX, y:block.y)) {
                     canMove = false
                     break
                 }
@@ -73,7 +73,7 @@ class Field: NSObject {
         
         if stepsToMove != 0 {
             for block in currentFigure {
-                block.positionX += stepsToMove
+                block.x += stepsToMove
             }
             modelChanged()
         }        
@@ -90,7 +90,7 @@ class Field: NSObject {
             return
         }
         
-        let newFigure = currentFigure.map{ Block(x: $0.positionX, y: $0.positionY) }
+        let newFigure = currentFigure.map{ Block(x: $0.x, y: $0.y) }
         let newFigureCenter = newFigure[currentFigure.index(of: currentFigureCenter!)!]
         
         for block in newFigure {
@@ -98,13 +98,13 @@ class Field: NSObject {
                 continue
             }
             
-            let xDifference = currentFigureCenter!.positionX - block.positionX
-            let yDifference = currentFigureCenter!.positionY - block.positionY
+            let xDifference = currentFigureCenter!.x - block.x
+            let yDifference = currentFigureCenter!.y - block.y
             
-            block.positionX = currentFigureCenter!.positionX + yDifference
-            block.positionY = currentFigureCenter!.positionY - xDifference
+            block.x = currentFigureCenter!.x + yDifference
+            block.y = currentFigureCenter!.y - xDifference
             
-            if oldFigures.contains(block) || block.positionX < 0 || block.positionX >= width || block.positionY < 0 || block.positionY >= height {
+            if oldFigures.contains(block) || block.x < 0 || block.x >= width || block.y < 0 || block.y >= height {
                 return
             }
         }
@@ -124,18 +124,18 @@ class Field: NSObject {
     
     private func tryToMoveCurrentFigureDown() -> Bool {
         for block in currentFigure {
-            let newPositionY = block.positionY + 1
-            if newPositionY == height {
+            let newY = block.y + 1
+            if newY == height {
                 return false
             }
             
-            if oldFigures.contains(Block(x: block.positionX, y: newPositionY)) {
+            if oldFigures.contains(Block(x: block.x, y: newY)) {
                 return false
             }
         }
         
         for block in currentFigure {
-            block.positionY += 1
+            block.y += 1
         }
         
         modelChanged()

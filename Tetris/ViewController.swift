@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         tetris.fieldHeight = field.height
         tetris.takenPositions.removeAll()
         for block in field.currentFigure + field.oldFigures {
-            let position = (x:block.positionX, y:block.positionY)
+            let position = (x: block.x, y: block.y)
             tetris.takenPositions += [position]
         }
         pauseButton.setTitle(field.inProgress() ? "Pause" : "Play", for: .normal)

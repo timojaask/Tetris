@@ -3,18 +3,18 @@
 
 class Block : Hashable {
     init(x: Int, y: Int) {
-        positionX = x
-        positionY = y
+        self.x = x
+        self.y = y
     }
     
     var hashValue: Int {
-        return positionX.hashValue & positionY.hashValue
+        return x.hashValue & y.hashValue
     }
     
     static func == (left: Block, right: Block) -> Bool {
-        return left.positionX == right.positionX && left.positionY == right.positionY
+        return left.x == right.x && left.y == right.y
     }
     
-    var positionX: Int
-    var positionY: Int
+    var x: Int
+    var y: Int
 }
