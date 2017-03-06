@@ -33,7 +33,9 @@ class ViewController: UIViewController {
     }
     
     @IBAction func dropFigure(_ sender: UISwipeGestureRecognizer) {
-        field.tryToDrop()
+        if field.inProgress() {
+            field.tryToDrop()
+        }
     }
     
     override func viewDidLoad() {
@@ -43,22 +45,26 @@ class ViewController: UIViewController {
     }
     
     @IBAction func slideFigure(_ sender: UIPanGestureRecognizer) {
-        switch sender.state {
-        case UIGestureRecognizerState.changed:
-            let horizontalDistance = sender.translation(in: tetris).x
-            
-            let steps = Int(horizontalDistance / tetris.blockSize / 0.6)
-            if steps != 0 {
-                field.tryToSlide(steps: steps)
-                sender.setTranslation(CGPoint.zero, in: tetris)
+        if field.inProgress() {
+            switch sender.state {
+            case UIGestureRecognizerState.changed:
+                let horizontalDistance = sender.translation(in: tetris).x
+                
+                let steps = Int(horizontalDistance / tetris.blockSize / 0.6)
+                if steps != 0 {
+                    field.tryToSlide(steps: steps)
+                    sender.setTranslation(CGPoint.zero, in: tetris)
+                }
+            default:
+                break
             }
-        default:
-            break
         }
     }
     
     @IBAction func rotateFigure(_ sender: Any) {
-        field.rotateFigure()
+        if field.inProgress() {
+            field.rotateFigure()
+        }
     }
     
     @IBAction func reset(_ sender: Any) {
