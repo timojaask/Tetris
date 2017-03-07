@@ -1,7 +1,7 @@
 //  Created by Andy on 03/03/2017.
 //  Copyright © 2017 Andy. All rights reserved.
 
-class Block : Hashable {
+class Block : Hashable, CustomDebugStringConvertible {
     init(x: Int, y: Int) {
         self.x = x
         self.y = y
@@ -9,6 +9,10 @@ class Block : Hashable {
     
     var hashValue: Int {
         return x.hashValue & y.hashValue
+    }
+    
+    var debugDescription: String {
+        return "Block(\(x), \(y))"
     }
     
     static func == (left: Block, right: Block) -> Bool {
