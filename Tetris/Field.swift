@@ -118,6 +118,7 @@ class Field: NSObject {
     @objc private func moveDown() {
         if !tryToMoveCurrentFigureDown() {
             spawnFigure()
+            removeFilledRows()
         }
         nextStep()
     }
@@ -196,6 +197,24 @@ class Field: NSObject {
         }
         
         modelChanged()
+    }
+    
+    private func removeFilledRows() {
+        var numberOfRemovedRows = 0
+        
+        for row in (0..<height).reversed() {
+            let blocksInTheRow = Set(oldFigures.filter { $0.y == row })
+            if blocksInTheRow.count == width {
+                oldFigures.subtract(blocksInTheRow)
+                numberOfRemovedRows += 1
+            }
+            else if numberOfRemovedRows > 0 {
+                // We can't just modify the item, Set<Block> goes crazy
+                oldFigures.subtract(blocksInTheRow)
+                blocksInTheRow.forEach{ $0.y += numberOfRemovedRows }
+                oldFigures.formUnion(blocksInTheRow)
+            }
+        }
     }
     
     private func modelChanged() {
