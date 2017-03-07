@@ -150,6 +150,8 @@ class Field: NSObject {
         case Beam
         case Square
         case Tee
+        case L
+        case J
     }
     
     private func spawnFigure() {
@@ -157,7 +159,7 @@ class Field: NSObject {
             oldFigures.insert(block)
         }
         
-        let shapeIndex = arc4random_uniform(Shape.Tee.rawValue+1)
+        let shapeIndex = arc4random_uniform(Shape.J.rawValue+1)
         let centerX = width / 2 - 1
         let centerY = 1
         if let shape = Shape(rawValue: shapeIndex) {
@@ -166,33 +168,45 @@ class Field: NSObject {
             case .S:
                 currentFigureCenter = Block(x: centerX, y: centerY)
                 currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX, y: centerY-1),
-                                 Block(x: centerX+1, y: centerY),
-                                 Block(x: centerX+1, y: centerY+1)]
+                                 Block(x: centerX,      y: centerY-1),
+                                 Block(x: centerX+1,    y: centerY),
+                                 Block(x: centerX+1,    y: centerY+1)]
             case .ReverseS:
                 currentFigureCenter = Block(x: centerX, y: centerY)
                 currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX+1, y: centerY-1),
-                                 Block(x: centerX+1, y: centerY),
-                                 Block(x: centerX, y: centerY+1)]
+                                 Block(x: centerX+1,    y: centerY-1),
+                                 Block(x: centerX+1,    y: centerY),
+                                 Block(x: centerX,      y: centerY+1)]
             case .Beam:
                 currentFigureCenter = Block(x: centerX, y: centerY)
                 currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX, y: centerY-1),
-                                 Block(x: centerX, y: centerY+1),
-                                 Block(x: centerX, y: centerY+2)]
+                                 Block(x: centerX,      y: centerY-1),
+                                 Block(x: centerX,      y: centerY+1),
+                                 Block(x: centerX,      y: centerY+2)]
             case .Square:
                 currentFigureCenter = nil
-                currentFigure = [Block(x: centerX, y: centerY),
-                                 Block(x: centerX+1, y: centerY-1),
-                                 Block(x: centerX+1, y: centerY),
-                                 Block(x: centerX, y: centerY-1)]
+                currentFigure = [Block(x: centerX,      y: centerY),
+                                 Block(x: centerX+1,    y: centerY-1),
+                                 Block(x: centerX+1,    y: centerY),
+                                 Block(x: centerX,      y: centerY-1)]
             case .Tee:
                 currentFigureCenter = Block(x: centerX, y: centerY)
                 currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX-1, y: centerY),
-                                 Block(x: centerX, y: centerY-1),
-                                 Block(x: centerX+1, y: centerY)]
+                                 Block(x: centerX-1,    y: centerY),
+                                 Block(x: centerX,      y: centerY-1),
+                                 Block(x: centerX+1,    y: centerY)]
+            case .L:
+                currentFigureCenter = Block(x: centerX, y: centerY)
+                currentFigure = [currentFigureCenter!,
+                                 Block(x: centerX,      y: centerY-1),
+                                 Block(x: centerX,      y: centerY+1),
+                                 Block(x: centerX+1,    y: centerY+1)]
+            case .J:
+                currentFigureCenter = Block(x: centerX, y: centerY)
+                currentFigure = [currentFigureCenter!,
+                                 Block(x: centerX,      y: centerY-1),
+                                 Block(x: centerX,      y: centerY+1),
+                                 Block(x: centerX-1,    y: centerY+1)]
             }
         }
         
