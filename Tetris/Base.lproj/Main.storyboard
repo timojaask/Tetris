@@ -51,7 +51,6 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <outletCollection property="gestureRecognizers" destination="XRH-uR-wbe" appends="YES" id="Htv-Fl-aXQ"/>
                                     <outletCollection property="gestureRecognizers" destination="aVt-Wi-Ryy" appends="YES" id="PFI-qD-5p4"/>
                                     <outletCollection property="gestureRecognizers" destination="xoB-Ws-86q" appends="YES" id="6if-IY-yfa"/>
                                 </connections>
@@ -72,16 +71,10 @@
                     <connections>
                         <outlet property="panGestureRecognizer" destination="aVt-Wi-Ryy" id="Hz2-bI-wCs"/>
                         <outlet property="pauseButton" destination="kxB-qC-kUn" id="ALS-2i-pGx"/>
-                        <outlet property="swipeGestureRecognizer" destination="XRH-uR-wbe" id="oOd-Iz-NDf"/>
                         <outlet property="tetris" destination="SW7-rg-vbC" id="jRP-bY-E2W"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="down" id="XRH-uR-wbe">
-                    <connections>
-                        <action selector="dropFigure:" destination="BYZ-38-t0r" id="8Cb-nw-dhx"/>
-                    </connections>
-                </swipeGestureRecognizer>
                 <panGestureRecognizer cancelsTouchesInView="NO" minimumNumberOfTouches="1" maximumNumberOfTouches="1" id="aVt-Wi-Ryy">
                     <connections>
                         <action selector="slideFigure:" destination="BYZ-38-t0r" id="nSY-iN-XB4"/>

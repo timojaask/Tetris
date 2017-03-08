@@ -45,13 +45,12 @@ class Field: NSObject {
         modelChanged()
     }
     
-    func tryToSlide(steps: Int) {
+    func tryToSlide(_ direction: Figure.SlideDirection, steps: Int) {
         var moved = false
-        let step = (steps > 0 ? 1 : -1)
-        for _ in 1...abs(steps) {
-            if currentFigure.canSlide(steps: step) {
+        for _ in 1...steps {
+            if currentFigure.canSlide(direction, steps: 1) {
                 moved = true
-                currentFigure.slide(steps: step)
+                currentFigure.slide(direction, steps: 1)
             }
         }
         

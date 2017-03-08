@@ -10,17 +10,39 @@ class Figure
         self.field = field
     }
     
-    func canSlide(steps: Int) -> Bool {
+    enum SlideDirection
+    {
+        case Left
+        case Right
+        case Down
+    }
+    
+    func canSlide(_ direction: SlideDirection, steps: Int) -> Bool {
         for block in blocks {
-            if field.canAdd(Block(x: block.x + steps, y: block.y)) {
+            let block = Block(x: block.x, y: block.y)
+            switch direction
+            {
+            case .Left:     block.x -= steps
+            case .Right:    block.x += steps
+            case .Down:     block.y += steps
+            }
+            if field.canAdd(block) {
                 return false
             }
         }
         return true
     }
     
-    func slide(steps: Int) {
-        blocks.forEach { $0.x += steps }
+    func slide(_ direction: SlideDirection, steps: Int) {
+        
+        var xSteps = 0, ySteps = 0
+        switch direction
+        {
+        case .Left:     xSteps -= steps
+        case .Right:    xSteps += steps
+        case .Down:     ySteps += steps
+        }
+        blocks.forEach { $0.x += xSteps; $0.y += ySteps }
     }
     
     func canMoveDown() -> Bool {

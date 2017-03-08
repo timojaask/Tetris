@@ -32,29 +32,41 @@ class ViewController: UIViewController {
         pauseButton.setTitle(field.inProgress() ? "Pause" : "Play", for: .normal)
     }
     
-    @IBAction func dropFigure(_ sender: UISwipeGestureRecognizer) {
-        if field.inProgress() {
-            field.tryToDrop()
-        }
-    }
-    
     override func viewDidLoad() {
         NotificationCenter.default.addObserver(self, selector: #selector(ViewController.updateUI), name: NSNotification.Name(rawValue: Field.modelUpdateNotification), object: nil)
-        panGestureRecognizer.require(toFail: swipeGestureRecognizer)
         field.nextStep()
     }
     
     @IBAction func slideFigure(_ sender: UIPanGestureRecognizer) {
         if field.inProgress() {
             switch sender.state {
-            case UIGestureRecognizerState.changed:
-                let horizontalDistance = sender.translation(in: tetris).x
-                
-                let steps = Int(horizontalDistance / tetris.blockSize / 0.6)
-                if steps != 0 {
-                    field.tryToSlide(steps: steps)
-                    sender.setTranslation(CGPoint.zero, in: tetris)
+            case .ended:
+                let verticalVelocity = sender.velocity(in: tetris).y
+                let swipeVelocity = CGFloat(1000.0)
+                if verticalVelocity > swipeVelocity {
+                    field.tryToDrop()
                 }
+            case .changed:
+                var translation = sender.translation(in: tetris)
+                
+                let coefficient = CGFloat(0.6)
+                
+                let xSteps = Int(translation.x / tetris.blockSize / coefficient)
+                let ySteps = Int(translation.y / tetris.blockSize / coefficient)
+                
+                if xSteps != 0 {
+                    field.tryToSlide(xSteps > 0 ? .Right : .Left, steps: abs(xSteps))
+                    translation.x = 0
+                    sender.setTranslation(translation, in: tetris)
+                }
+                if ySteps > 0 {
+                    field.tryToSlide(.Down, steps: ySteps)
+                    translation.y = 0
+                } else if ySteps < 0 {
+                    translation.y = 0
+                }
+                
+                sender.setTranslation(translation, in: tetris)
             default:
                 break
             }
