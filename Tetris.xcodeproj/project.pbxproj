@@ -15,6 +15,7 @@
 		DA9124F11E5F19A300403576 /* TetrisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9124F01E5F19A300403576 /* TetrisView.swift */; };
 		DA9124F31E69BEC500403576 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9124F21E69BEC500403576 /* Block.swift */; };
 		DA9124F51E6AC89200403576 /* Field.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA9124F41E6AC89200403576 /* Field.swift */; };
+		DAAA4CB51E702F8500F4A80D /* Figure.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4CB41E702F8500F4A80D /* Figure.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		DA9124F01E5F19A300403576 /* TetrisView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TetrisView.swift; sourceTree = "<group>"; };
 		DA9124F21E69BEC500403576 /* Block.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		DA9124F41E6AC89200403576 /* Field.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
+		DAAA4CB41E702F8500F4A80D /* Figure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Figure.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				DA9124EF1E5F18C900403576 /* Stuff */,
 				DA9124DF1E5F18B100403576 /* ViewController.swift */,
 				DA9124F21E69BEC500403576 /* Block.swift */,
+				DAAA4CB41E702F8500F4A80D /* Figure.swift */,
 				DA9124F41E6AC89200403576 /* Field.swift */,
 				DA9124F01E5F19A300403576 /* TetrisView.swift */,
 				DA9124E11E5F18B100403576 /* Main.storyboard */,
@@ -159,6 +162,7 @@
 				DA9124F31E69BEC500403576 /* Block.swift in Sources */,
 				DA9124E01E5F18B100403576 /* ViewController.swift in Sources */,
 				DA9124DE1E5F18B100403576 /* AppDelegate.swift in Sources */,
+				DAAA4CB51E702F8500F4A80D /* Figure.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,9 +6,10 @@ import Foundation
 class Field: NSObject {
     override init() {
         super.init()
+        self.currentFigure = Figure(blocks: Array<Block>(), field: self)
         spawnFigure()
     }
-
+    
     static let modelUpdateNotification = "dataModelDidUpdateNotification"
     
     var width = 12
@@ -33,7 +34,7 @@ class Field: NSObject {
     func inProgress() -> Bool {
         return timer != nil && timer!.isValid
     }
-
+    
     func reset() {
         if inProgress() {
             timer!.invalidate()
@@ -45,43 +46,30 @@ class Field: NSObject {
     }
     
     func tryToSlide(steps: Int) {
-        var stepsToMove = 0
-        
-        for i in 1...abs(steps) {
-            let step = i * (steps > 0 ? 1 : -1)
-            
-            var canMove = true
-            
-            for block in currentFigure {
-                let newX = block.x + step
-                if newX < 0 || newX >= width {
-                    canMove = false
-                    break
-                }
-                if oldFigures.contains(Block(x:newX, y:block.y)) {
-                    canMove = false
-                    break
-                }
-            }
-            
-            if canMove {
-                stepsToMove = step
-            } else {
-                break
+        var moved = false
+        let step = (steps > 0 ? 1 : -1)
+        for _ in 1...abs(steps) {
+            if currentFigure.canSlide(steps: step) {
+                moved = true
+                currentFigure.slide(steps: step)
             }
         }
         
-        if stepsToMove != 0 {
-            for block in currentFigure {
-                block.x += stepsToMove
-            }
+        if moved {
             modelChanged()
-        }        
+        }
     }
     
     func tryToDrop() {
-        // Simple code for now
-        while tryToMoveCurrentFigureDown() {
+        var moved = false
+        
+        while currentFigure.canMoveDown() {
+            currentFigure.moveDown()
+            moved = true
+        }
+        
+        if moved {
+            modelChanged()
         }
     }
     
@@ -90,29 +78,14 @@ class Field: NSObject {
             return
         }
         
-        let newFigure = currentFigure.map{ Block(x: $0.x, y: $0.y) }
-        let newFigureCenter = newFigure[currentFigure.index(of: currentFigureCenter!)!]
-        
-        for block in newFigure {
-            if block == currentFigureCenter {                
-                continue
-            }
-            
-            let xDifference = currentFigureCenter!.x - block.x
-            let yDifference = currentFigureCenter!.y - block.y
-            
-            block.x = currentFigureCenter!.x + yDifference
-            block.y = currentFigureCenter!.y - xDifference
-            
-            if oldFigures.contains(block) || block.x < 0 || block.x >= width || block.y < 0 || block.y >= height {
-                return
-            }
+        if currentFigure.canRotate(around: currentFigureCenter!) {
+            currentFigure.rotate(around: currentFigureCenter!)
+            modelChanged()
         }
-        
-        currentFigure = newFigure
-        currentFigureCenter = newFigureCenter
-        
-        modelChanged()
+    }
+    
+    func canAdd(_ block: Block) -> Bool {
+        return oldFigures.contains(block) || block.x < 0 || block.x >= width || block.y < 0 || block.y >= height
     }
     
     @objc private func moveDown() {
@@ -124,20 +97,11 @@ class Field: NSObject {
     }
     
     private func tryToMoveCurrentFigureDown() -> Bool {
-        for block in currentFigure {
-            let newY = block.y + 1
-            if newY == height {
-                return false
-            }
-            
-            if oldFigures.contains(Block(x: block.x, y: newY)) {
-                return false
-            }
+        if !currentFigure.canMoveDown() {
+            return false
         }
         
-        for block in currentFigure {
-            block.y += 1
-        }
+        currentFigure.moveDown()
         
         modelChanged()
         
@@ -155,7 +119,7 @@ class Field: NSObject {
     }
     
     private func spawnFigure() {
-        for block in currentFigure {
+        for block in currentFigure.blocks {
             oldFigures.insert(block)
         }
         
@@ -167,46 +131,53 @@ class Field: NSObject {
             {
             case .S:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX,      y: centerY-1),
-                                 Block(x: centerX+1,    y: centerY),
-                                 Block(x: centerX+1,    y: centerY+1)]
+                currentFigure = Figure(blocks: [currentFigureCenter!,
+                                                Block(x: centerX,      y: centerY-1),
+                                                Block(x: centerX+1,    y: centerY),
+                                                Block(x: centerX+1,    y: centerY+1)],
+                                       field: self)
             case .ReverseS:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX+1,    y: centerY-1),
-                                 Block(x: centerX+1,    y: centerY),
-                                 Block(x: centerX,      y: centerY+1)]
+                currentFigure = Figure(blocks: [currentFigureCenter!,
+                                                Block(x: centerX+1,    y: centerY-1),
+                                                Block(x: centerX+1,    y: centerY),
+                                                Block(x: centerX,      y: centerY+1)],
+                                       field: self)
             case .Beam:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX,      y: centerY-1),
-                                 Block(x: centerX,      y: centerY+1),
-                                 Block(x: centerX,      y: centerY+2)]
+                currentFigure = Figure(blocks: [currentFigureCenter!,
+                                                Block(x: centerX,      y: centerY-1),
+                                                Block(x: centerX,      y: centerY+1),
+                                                Block(x: centerX,      y: centerY+2)],
+                                       field: self)
             case .Square:
                 currentFigureCenter = nil
-                currentFigure = [Block(x: centerX,      y: centerY),
-                                 Block(x: centerX+1,    y: centerY-1),
-                                 Block(x: centerX+1,    y: centerY),
-                                 Block(x: centerX,      y: centerY-1)]
+                currentFigure = Figure(blocks: [Block(x: centerX,      y: centerY),
+                                                Block(x: centerX+1,    y: centerY-1),
+                                                Block(x: centerX+1,    y: centerY),
+                                                Block(x: centerX,      y: centerY-1)],
+                                       field: self)
             case .Tee:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX-1,    y: centerY),
-                                 Block(x: centerX,      y: centerY-1),
-                                 Block(x: centerX+1,    y: centerY)]
+                currentFigure = Figure(blocks: [currentFigureCenter!,
+                                                Block(x: centerX-1,    y: centerY),
+                                                Block(x: centerX,      y: centerY-1),
+                                                Block(x: centerX+1,    y: centerY)],
+                                       field: self)
             case .L:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX,      y: centerY-1),
-                                 Block(x: centerX,      y: centerY+1),
-                                 Block(x: centerX+1,    y: centerY+1)]
+                currentFigure = Figure(blocks: [currentFigureCenter!,
+                                                Block(x: centerX,      y: centerY-1),
+                                                Block(x: centerX,      y: centerY+1),
+                                                Block(x: centerX+1,    y: centerY+1)],
+                                       field: self)
             case .J:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = [currentFigureCenter!,
-                                 Block(x: centerX,      y: centerY-1),
-                                 Block(x: centerX,      y: centerY+1),
-                                 Block(x: centerX-1,    y: centerY+1)]
+                currentFigure = Figure(blocks: [currentFigureCenter!,
+                                                Block(x: centerX,      y: centerY-1),
+                                                Block(x: centerX,      y: centerY+1),
+                                                Block(x: centerX-1,    y: centerY+1)],
+                                       field: self)
             }
         }
         
@@ -235,7 +206,7 @@ class Field: NSObject {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Field.modelUpdateNotification), object: nil)
     }
     
-    private(set) var currentFigure: [Block] = []
+    private(set) var currentFigure: Figure!
     private var currentFigureCenter: Block? = nil
     
     private(set) var oldFigures = Set<Block>()
