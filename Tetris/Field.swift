@@ -20,6 +20,9 @@ class Field: NSObject {
     private var timer: Timer? = nil
     
     func nextStep() {
+        if timer != nil {
+            timer!.invalidate()
+        }
         timer = Timer.scheduledTimer(timeInterval: stepInterval, target:self, selector: #selector(Field.moveDown), userInfo: nil, repeats: false)
         modelChanged()
     }
@@ -69,6 +72,7 @@ class Field: NSObject {
         
         if moved {
             dumpCurrentFigureIntoThePile()
+            nextStep()
             modelChanged()
         }
     }
