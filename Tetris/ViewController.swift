@@ -41,9 +41,10 @@ class ViewController: UIViewController {
         if field.inProgress() {
             switch sender.state {
             case .ended:
+                let horizontalVelocity = sender.velocity(in: tetris).x
                 let verticalVelocity = sender.velocity(in: tetris).y
                 let swipeVelocity = CGFloat(1000.0)
-                if verticalVelocity > swipeVelocity {
+                if verticalVelocity > swipeVelocity && abs(horizontalVelocity) < swipeVelocity {
                     field.tryToDrop()
                 }
             case .changed:
@@ -53,17 +54,18 @@ class ViewController: UIViewController {
                 
                 let xSteps = Int(translation.x / tetris.blockSize / coefficient)
                 let ySteps = Int(translation.y / tetris.blockSize / coefficient)
-                
-                if xSteps != 0 {
+
+                if xSteps != 0 && abs(xSteps) > abs(ySteps) {
                     field.tryToSlide(xSteps > 0 ? .Right : .Left, steps: abs(xSteps))
-                    translation.x = 0
+                    translation = CGPoint.zero
                     sender.setTranslation(translation, in: tetris)
-                }
-                if ySteps > 0 {
-                    field.tryToSlide(.Down, steps: ySteps)
-                    translation.y = 0
-                } else if ySteps < 0 {
-                    translation.y = 0
+                } else {
+                    if ySteps > 0 {
+                        field.tryToSlide(.Down, steps: ySteps)
+                        translation = CGPoint.zero
+                    } else if ySteps < 0 {
+                        translation = CGPoint.zero
+                    }
                 }
                 
                 sender.setTranslation(translation, in: tetris)
