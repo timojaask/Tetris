@@ -68,6 +68,7 @@ class Field: NSObject {
         }
         
         if moved {
+            dumpCurrentFigureIntoThePile()
             modelChanged()
         }
     }
@@ -118,9 +119,7 @@ class Field: NSObject {
     }
     
     private func spawnFigure() {
-        for block in currentFigure.blocks {
-            oldFigures.insert(block)
-        }
+        dumpCurrentFigureIntoThePile()
         
         let shapeIndex = arc4random_uniform(Shape.J.rawValue+1)
         let centerX = width / 2 - 1
@@ -201,6 +200,12 @@ class Field: NSObject {
         }
     }
     
+    private func dumpCurrentFigureIntoThePile() {
+        for block in currentFigure.blocks {
+            oldFigures.insert(block)
+        }
+    }
+
     private func modelChanged() {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Field.modelUpdateNotification), object: nil)
     }
