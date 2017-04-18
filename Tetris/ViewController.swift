@@ -4,19 +4,13 @@
 import UIKit
 
 class ViewController: UIViewController {
-    @IBOutlet weak var tetris: TetrisView! {
-        didSet {
-            updateUI()
-        }
-    }
+    @IBOutlet weak var tetris: TetrisView! 
     
     @IBOutlet weak var pauseButton: UIButton!
     
-    var field = Field() {
-        didSet {
-            updateUI()
-        }
-    }
+    var field = Field()
+    
+    var gameOverView: UIView? = nil
     
     @IBOutlet var swipeGestureRecognizer: UISwipeGestureRecognizer!
     @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
@@ -30,6 +24,43 @@ class ViewController: UIViewController {
             tetris.takenPositions += [position]
         }
         pauseButton.setTitle(field.inProgress() ? "Pause" : "Play", for: .normal)
+        
+        if field.gameOver && gameOverView == nil {
+            let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.regular)
+            
+            gameOverView = UIVisualEffectView(effect: blurEffect)
+            gameOverView!.frame = self.view.bounds
+            gameOverView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            self.view.addSubview(gameOverView!)
+            
+            let label = UILabel()
+            label.text = "GAME OVER"
+            label.textAlignment = .center
+            label.font = UIFont.systemFont(ofSize: 35)
+            label.frame = gameOverView!.bounds
+            label.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            gameOverView!.addSubview(label)
+            
+            let button = UIButton()
+            button.setTitle("Start again", for: .normal)
+            button.setTitleColor(UIColor.blue, for: .normal)
+            button.sizeToFit()
+            button.addTarget(self, action: #selector(reset), for: .touchUpInside)
+            
+            gameOverView!.addSubview(button)
+            
+            label.translatesAutoresizingMaskIntoConstraints = false
+            button.translatesAutoresizingMaskIntoConstraints = false
+            
+            label.centerXAnchor.constraint(equalTo: gameOverView!.centerXAnchor).isActive = true
+            label.centerYAnchor.constraint(equalTo: gameOverView!.centerYAnchor).isActive = true
+            
+            button.topAnchor.constraint(equalTo: label.layoutMarginsGuide.bottomAnchor, constant: 100.0).isActive = true
+            button.centerXAnchor.constraint(equalTo: gameOverView!.centerXAnchor).isActive = true
+        } else if !field.gameOver && gameOverView != nil {
+            gameOverView!.removeFromSuperview()
+            gameOverView = nil
+        }
     }
     
     override func viewDidLoad() {

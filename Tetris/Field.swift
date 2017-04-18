@@ -44,6 +44,7 @@ class Field: NSObject {
         }
         spawnFigure()
         oldFigures = []
+        gameOver = false
         nextStep()
         modelChanged()
     }
@@ -183,6 +184,14 @@ class Field: NSObject {
             }
         }
         
+        for block in currentFigure.blocks {
+            if oldFigures.contains(block) {
+                gameOver = true
+                timer!.invalidate()
+                break
+            }
+        }
+        
         modelChanged()
     }
     
@@ -218,4 +227,6 @@ class Field: NSObject {
     private var currentFigureCenter: Block? = nil
     
     private(set) var oldFigures = Set<Block>()
+    
+    private(set) var gameOver = false
 }
