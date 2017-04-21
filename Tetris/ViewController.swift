@@ -19,7 +19,14 @@ class ViewController: UIViewController {
         tetris.fieldWidth = field.width
         tetris.fieldHeight = field.height
         tetris.takenPositions.removeAll()
-        for block in field.currentFigure.blocks + field.oldFigures {
+        
+        var blocks = Array<Block>()
+        if let currentFigure = field.currentFigure {
+            blocks.append(contentsOf: currentFigure.blocks)
+        }
+        blocks += Array(field.oldFigures.keys)
+
+        for block in blocks {
             let position = (x: block.x, y: block.y)
             tetris.takenPositions += [position]
         }

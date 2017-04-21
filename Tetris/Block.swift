@@ -19,6 +19,12 @@ class Block : Hashable, CustomDebugStringConvertible {
         return left.x == right.x && left.y == right.y
     }
     
+    func adjacentTo(_ other: Block) -> Bool {
+        return
+            (x == other.x && abs(y - other.y) == 1) ||
+            (y == other.y && abs(x - other.x) == 1)
+    }
+    
     var x: Int
     var y: Int
 }

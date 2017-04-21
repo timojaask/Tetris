@@ -23,7 +23,7 @@ class Field: NSObject {
         if timer != nil {
             timer!.invalidate()
         }
-        timer = Timer.scheduledTimer(timeInterval: stepInterval, target:self, selector: #selector(Field.moveDown), userInfo: nil, repeats: false)
+        timer = Timer.scheduledTimer(timeInterval: stepInterval, target:self, selector: #selector(Field.step), userInfo: nil, repeats: false)
         modelChanged()
     }
     
@@ -43,13 +43,18 @@ class Field: NSObject {
             timer!.invalidate()
         }
         spawnFigure()
-        oldFigures = []
+        oldFigures = [:]
+        fallingOldFigures = []
         gameOver = false
         nextStep()
         modelChanged()
     }
     
     func tryToSlide(_ direction: Figure.SlideDirection, steps: Int) {
+        if currentFigure == nil {
+            return
+        }
+        
         var moved = false
         for _ in 1...steps {
             if currentFigure.canSlide(direction, steps: 1) {
@@ -64,6 +69,10 @@ class Field: NSObject {
     }
     
     func tryToDrop() {
+        if currentFigure == nil {
+            return
+        }
+        
         var moved = false
         
         while currentFigure.canMoveDown() {
@@ -89,28 +98,51 @@ class Field: NSObject {
         }
     }
     
-    func canAdd(_ block: Block) -> Bool {
-        return oldFigures.contains(block) || block.x < 0 || block.x >= width || block.y < 0 || block.y >= height
-    }
-    
-    @objc private func moveDown() {
-        if !tryToMoveCurrentFigureDown() {
-            spawnFigure()
-            removeFilledRows()
+    @objc private func step() {
+        if fallingOldFigures.isEmpty {
+            if currentFigure == nil {
+                removeFilledRows()
+                if fallingOldFigures.isEmpty {
+                    spawnFigure()
+                }                
+            } else {
+                tryToMoveCurrentFigureDown()
+                if currentFigure == nil {
+                    removeFilledRows()
+                }
+            }
+        } else {
+            tryToMoveFallingFiguresDown()
         }
+        
         nextStep()
     }
     
-    private func tryToMoveCurrentFigureDown() -> Bool {
-        if !currentFigure.canMoveDown() {
-            return false
+    private func tryToMoveCurrentFigureDown() {
+        if currentFigure == nil {
+            return
         }
         
-        currentFigure.moveDown()
+        if currentFigure.canMoveDown() {
+            currentFigure.moveDown()
+        } else {
+            dumpCurrentFigureIntoThePile()
+        }
         
         modelChanged()
-        
-        return true
+    }
+    
+    private func tryToMoveFallingFiguresDown() {
+        for figure in fallingOldFigures {
+            for block in figure.blocks {
+                oldFigures.removeValue(forKey: block)
+            }
+            figure.moveDown()
+            for block in figure.blocks {
+                oldFigures[block] = figure
+            }
+        }
+        fallingOldFigures = fallingOldFigures.filter { $0.canMoveDown() }
     }
     
     enum Shape: UInt32 {
@@ -185,7 +217,7 @@ class Field: NSObject {
         }
         
         for block in currentFigure.blocks {
-            if oldFigures.contains(block) {
+            if oldFigures[block] != nil {
                 gameOver = true
                 timer!.invalidate()
                 break
@@ -199,23 +231,81 @@ class Field: NSObject {
         var numberOfRemovedRows = 0
         
         for row in (0..<height).reversed() {
-            let blocksInTheRow = Set(oldFigures.filter { $0.y == row })
-            if blocksInTheRow.count == width {
-                oldFigures.subtract(blocksInTheRow)
+            var figuresInCurrentRow = Array<Figure>()
+            var blocksInCurrentRow = Array<Block>()
+
+            for col in 0..<width {
+                if let figure = oldFigures[Block(x: col, y: row)] {
+                    for block in figure.blocks {
+                        if block.x == col && block.y == row {
+                            blocksInCurrentRow.append(block)
+                        }
+                    }
+                }
+            }
+            
+            for block in blocksInCurrentRow {
+                var alreadyAdded = false
+                for figure in figuresInCurrentRow {
+                    if figure.blocks.contains(where: {$0 == block}) {
+                        alreadyAdded = true
+                        break
+                    }
+                }
+                
+                if !alreadyAdded {
+                    figuresInCurrentRow.append(oldFigures[block]!)
+                }
+            }
+            
+            if blocksInCurrentRow.count == width {
+                for figure in figuresInCurrentRow {
+                    figure.removeBlocksInRow(row)
+                    if figure.isBroken() {
+                        let newFigure = figure.breakFigure()
+                        for b in newFigure.blocks {
+                            oldFigures[b] = newFigure
+                        }
+                    }
+                }
                 numberOfRemovedRows += 1
+                
+                for block in blocksInCurrentRow {
+                    oldFigures.removeValue(forKey: block)
+                }
+                
+            } else if numberOfRemovedRows > 0 {
+                for block in blocksInCurrentRow {
+                    let figure = oldFigures.removeValue(forKey: block)
+                    block.y += numberOfRemovedRows
+                    oldFigures[block] = figure
+                }
             }
-            else if numberOfRemovedRows > 0 {
-                // We can't just modify the item, Set<Block> goes crazy
-                oldFigures.subtract(blocksInTheRow)
-                blocksInTheRow.forEach{ $0.y += numberOfRemovedRows }
-                oldFigures.formUnion(blocksInTheRow)
+        }
+        
+        var checkedBlocks = Set<Block>()
+        
+        for figure in oldFigures.values {
+            let figureBlocks = Set(figure.blocks)
+            if !checkedBlocks.intersection(figureBlocks).isEmpty {
+                continue
             }
+            
+            if figure.isFloating() {
+                fallingOldFigures.append(figure)
+            }
+            
+            checkedBlocks = checkedBlocks.union(figureBlocks)
         }
     }
     
     private func dumpCurrentFigureIntoThePile() {
-        for block in currentFigure.blocks {
-            oldFigures.insert(block)
+        if currentFigure != nil {
+            for b in currentFigure.blocks {
+                oldFigures[b] = currentFigure
+            }
+            currentFigure = nil
+            currentFigureCenter = nil
         }
     }
 
@@ -226,7 +316,8 @@ class Field: NSObject {
     private(set) var currentFigure: Figure!
     private var currentFigureCenter: Block? = nil
     
-    private(set) var oldFigures = Set<Block>()
+    private(set) var oldFigures = Dictionary<Block, Figure>()
+    private var fallingOldFigures = Array<Figure>()
     
     private(set) var gameOver = false
 }

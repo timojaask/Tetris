@@ -3,7 +3,7 @@
 
 import Foundation
 
-class Figure
+class Figure : CustomDebugStringConvertible
 {
     init(blocks: Array<Block> = Array<Block>(), field: Field) {
         self.blocks = blocks
@@ -26,7 +26,7 @@ class Figure
             case .Right:    block.x += steps
             case .Down:     block.y += steps
             }
-            if field.canAdd(block) {
+            if !canMoveTo(block) {
                 return false
             }
         }
@@ -48,7 +48,7 @@ class Figure
     func canMoveDown() -> Bool {
         for block in blocks {
             let newBlock = Block(x: block.x, y: block.y + 1)
-            if field.canAdd(newBlock) {
+            if !canMoveTo(newBlock) {
                 return false
             }
         }
@@ -70,7 +70,7 @@ class Figure
             
             let newBlock = Block(x: center.x + yDifference, y: center.y - xDifference)
             
-            if field.canAdd(newBlock) {
+            if !canMoveTo(newBlock) {
                 return false
             }
         }
@@ -90,6 +90,74 @@ class Figure
             block.x = center.x + yDifference
             block.y = center.y - xDifference
         }
+    }
+    
+    private func canMoveTo(_ block: Block) -> Bool {
+        if block.x < 0 || block.x >= field.width || block.y < 0 || block.y >= field.height {
+            return false
+        }
+        
+        if let figure = field.oldFigures[block] {
+            if figure !== self {
+                return false
+            }
+        }
+        
+        return true
+    }
+        
+    func removeBlocksInRow(_ row: Int) {
+        blocks = blocks.filter { $0.y != row }
+    }
+    
+    func isBroken() -> Bool {
+        let n = blocks.count
+        if n <= 1 {
+            return false
+        }
+        
+        var numberOfConnections = 0
+        for i in 1...(n-1) {
+            for j in (i+1)...n {
+                let b1 = blocks[i-1]
+                let b2 = blocks[j-1]
+                if b1.adjacentTo(b2) {
+                    numberOfConnections += 1
+                }
+            }
+        }
+        return numberOfConnections == 0
+    }
+    
+    func breakFigure() -> Figure {
+        let newFigure = Figure(blocks: [blocks.first!], field: field)
+        blocks.removeFirst()
+        
+        for index in stride(from: blocks.count - 1, through: 0, by: -1) {
+            if newFigure.blocks.first!.adjacentTo(blocks[index]) {
+                newFigure.blocks.append(blocks[index])
+            }
+        }
+        
+        return newFigure
+    }
+    
+    func isFloating() -> Bool {
+        for block in blocks {
+            if block.y == (field.height-1) {
+                return false
+            }
+            let figureBelow = field.oldFigures[Block(x: block.x, y: block.y + 1)]
+            if figureBelow != nil && figureBelow !== self {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    var debugDescription: String {
+        return "Figure(\(blocks))"
     }
     
     private(set) var blocks: Array<Block>
