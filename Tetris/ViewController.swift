@@ -11,8 +11,7 @@ class ViewController: UIViewController {
     var field = Field()
     
     var gameOverView: UIView? = nil
-    
-    @IBOutlet var swipeGestureRecognizer: UISwipeGestureRecognizer!
+
     @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
 
     func figureColor(_ figure: Figure) -> UIColor {
