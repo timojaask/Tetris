@@ -18,19 +18,19 @@ class ViewController: UIViewController {
         switch(figure.shape)
         {
         case .Beam:
-            return UIColor(hue: CGFloat(0.50), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+            return UIColor(hue: CGFloat(0.50), saturation: CGFloat(0.38), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
         case .J:
             return UIColor(hue: CGFloat(0.57), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
         case .L:
             return UIColor(hue: CGFloat(0.07), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
         case .S:
-            return UIColor(hue: CGFloat(0.32), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+            return UIColor(hue: CGFloat(0.32), saturation: CGFloat(0.40), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
         case .ReverseS:
             return UIColor(hue: CGFloat(0.00), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
         case .Square:
-            return UIColor(hue: CGFloat(0.17), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+            return UIColor(hue: CGFloat(0.17), saturation: CGFloat(0.50), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
         case .Tee:
-            return UIColor(hue: CGFloat(0.78), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+            return UIColor(hue: CGFloat(0.78), saturation: CGFloat(0.40), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
         case .Undefined:
             return UIColor.white
         }
