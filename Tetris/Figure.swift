@@ -5,11 +5,24 @@ import Foundation
 
 class Figure : CustomDebugStringConvertible
 {
-    init(blocks: Array<Block> = Array<Block>(), field: Field) {
+    enum Shape: UInt32 {
+        case S = 0
+        case ReverseS
+        case Beam
+        case Square
+        case Tee
+        case L
+        case J
+
+        case Undefined = 100
+    }
+
+    init(shape: Shape, blocks: Array<Block> = Array<Block>(), field: Field) {
+        self.shape = shape
         self.blocks = blocks
         self.field = field
     }
-    
+
     enum SlideDirection
     {
         case Left
@@ -130,7 +143,7 @@ class Figure : CustomDebugStringConvertible
     }
     
     func breakFigure() -> Figure {
-        let newFigure = Figure(blocks: [blocks.first!], field: field)
+        let newFigure = Figure(shape: self.shape, blocks: [blocks.first!], field: field)
         blocks.removeFirst()
         
         for index in stride(from: blocks.count - 1, through: 0, by: -1) {
@@ -160,6 +173,8 @@ class Figure : CustomDebugStringConvertible
         return "Figure(\(blocks))"
     }
     
+    let shape: Shape
+
     private(set) var blocks: Array<Block>
     
     private unowned var field: Field

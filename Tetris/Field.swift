@@ -13,7 +13,7 @@ class Field: NSObject {
             }
         }
 
-        self.currentFigure = Figure(blocks: Array<Block>(), field: self)
+        self.currentFigure = Figure(shape: .Undefined, field: self)
         spawnFigure()
     }
     
@@ -152,75 +152,64 @@ class Field: NSObject {
         fallingOldFigures = fallingOldFigures.filter { $0.canMoveDown() }
     }
     
-    enum Shape: UInt32 {
-        case S = 0
-        case ReverseS
-        case Beam
-        case Square
-        case Tee
-        case L
-        case J
-    }
-    
     private func spawnFigure() {
         dumpCurrentFigureIntoThePile()
         
-        let shapeIndex = arc4random_uniform(Shape.J.rawValue+1)
+        let shapeIndex = arc4random_uniform(Figure.Shape.J.rawValue+1)
         let centerX = width / 2 - 1
         let centerY = 1
-        if let shape = Shape(rawValue: shapeIndex) {
+        if let shape = Figure.Shape(rawValue: shapeIndex) {
+            var blocks = Array<Block>()
+
             switch shape
             {
             case .S:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = Figure(blocks: [currentFigureCenter!,
-                                                Block(x: centerX,      y: centerY-1),
-                                                Block(x: centerX+1,    y: centerY),
-                                                Block(x: centerX+1,    y: centerY+1)],
-                                       field: self)
+                blocks = [currentFigureCenter!,
+                          Block(x: centerX,      y: centerY-1),
+                          Block(x: centerX+1,    y: centerY),
+                          Block(x: centerX+1,    y: centerY+1)]
             case .ReverseS:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = Figure(blocks: [currentFigureCenter!,
-                                                Block(x: centerX+1,    y: centerY-1),
-                                                Block(x: centerX+1,    y: centerY),
-                                                Block(x: centerX,      y: centerY+1)],
-                                       field: self)
+                blocks = [currentFigureCenter!,
+                          Block(x: centerX+1,    y: centerY-1),
+                          Block(x: centerX+1,    y: centerY),
+                          Block(x: centerX,      y: centerY+1)]
             case .Beam:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = Figure(blocks: [currentFigureCenter!,
-                                                Block(x: centerX,      y: centerY-1),
-                                                Block(x: centerX,      y: centerY+1),
-                                                Block(x: centerX,      y: centerY+2)],
-                                       field: self)
+                blocks = [currentFigureCenter!,
+                          Block(x: centerX,      y: centerY-1),
+                          Block(x: centerX,      y: centerY+1),
+                          Block(x: centerX,      y: centerY+2)]
             case .Square:
                 currentFigureCenter = nil
-                currentFigure = Figure(blocks: [Block(x: centerX,      y: centerY),
-                                                Block(x: centerX+1,    y: centerY-1),
-                                                Block(x: centerX+1,    y: centerY),
-                                                Block(x: centerX,      y: centerY-1)],
-                                       field: self)
+                blocks = [Block(x: centerX,      y: centerY),
+                          Block(x: centerX+1,    y: centerY-1),
+                          Block(x: centerX+1,    y: centerY),
+                          Block(x: centerX,      y: centerY-1)]
             case .Tee:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = Figure(blocks: [currentFigureCenter!,
-                                                Block(x: centerX-1,    y: centerY),
-                                                Block(x: centerX,      y: centerY-1),
-                                                Block(x: centerX+1,    y: centerY)],
-                                       field: self)
+                blocks = [currentFigureCenter!,
+                          Block(x: centerX-1,    y: centerY),
+                          Block(x: centerX,      y: centerY-1),
+                          Block(x: centerX+1,    y: centerY)]
             case .L:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = Figure(blocks: [currentFigureCenter!,
-                                                Block(x: centerX,      y: centerY-1),
-                                                Block(x: centerX,      y: centerY+1),
-                                                Block(x: centerX+1,    y: centerY+1)],
-                                       field: self)
+                blocks = [currentFigureCenter!,
+                          Block(x: centerX,      y: centerY-1),
+                          Block(x: centerX,      y: centerY+1),
+                          Block(x: centerX+1,    y: centerY+1)]
             case .J:
                 currentFigureCenter = Block(x: centerX, y: centerY)
-                currentFigure = Figure(blocks: [currentFigureCenter!,
-                                                Block(x: centerX,      y: centerY-1),
-                                                Block(x: centerX,      y: centerY+1),
-                                                Block(x: centerX-1,    y: centerY+1)],
-                                       field: self)
+                blocks = [currentFigureCenter!,
+                          Block(x: centerX,      y: centerY-1),
+                          Block(x: centerX,      y: centerY+1),
+                          Block(x: centerX-1,    y: centerY+1)]
+            case .Undefined:
+                print("Trying to spawn undefined shape")
             }
+
+            currentFigure = Figure(shape: shape, blocks: blocks, field: self)
         }
         
         for block in currentFigure.blocks {
