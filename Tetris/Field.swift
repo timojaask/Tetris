@@ -106,6 +106,10 @@ class Field: NSObject {
     }
     
     @objc private func step() {
+        if gameOver {
+            return
+        }
+
         if fallingOldFigures.isEmpty {
             if currentFigure == nil {
                 removeFilledRows()
@@ -215,7 +219,7 @@ class Field: NSObject {
         for block in currentFigure.blocks {
             if oldFigures[block] != nil {
                 gameOver = true
-                timer!.invalidate()
+                currentFigure = nil
                 break
             }
         }
