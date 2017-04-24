@@ -59,6 +59,7 @@ class ViewController: UIViewController {
             gameOverView = UIVisualEffectView(effect: blurEffect)
             gameOverView!.frame = self.view.bounds
             gameOverView!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            gameOverView!.alpha = 0.9
             self.view.addSubview(gameOverView!)
             
             let label = UILabel()
