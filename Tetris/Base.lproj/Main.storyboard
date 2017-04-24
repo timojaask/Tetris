@@ -47,7 +47,10 @@
                                 <gestureRecognizers/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="gridColor">
-                                        <color key="value" red="0.84898546006944442" green="0.84898546006944442" blue="0.84898546006944442" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="value" red="0.92982313368055558" green="0.92982313368055558" blue="0.92982313368055558" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="mainColor">
+                                        <color key="value" red="0.71484375" green="0.71484375" blue="0.71484375" alpha="1" colorSpace="calibratedRGB"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
