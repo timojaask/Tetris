@@ -6,14 +6,21 @@ import Foundation
 class Field: NSObject {
     override init() {
         super.init()
+
+        if let customWidthString = ProcessInfo.processInfo.environment["FIELD_WIDTH"] {
+            if let customWidth = Int(customWidthString) {
+                self.width = customWidth
+            }
+        }
+
         self.currentFigure = Figure(blocks: Array<Block>(), field: self)
         spawnFigure()
     }
     
     static let modelUpdateNotification = "dataModelDidUpdateNotification"
     
-    var width = 12
-    var height = 20
+    private(set) var width = 12
+    private(set) var height = 20
     
     private var stepInterval = 1.0
     
