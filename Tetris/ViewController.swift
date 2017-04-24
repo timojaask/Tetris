@@ -14,22 +14,44 @@ class ViewController: UIViewController {
     
     @IBOutlet var swipeGestureRecognizer: UISwipeGestureRecognizer!
     @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
-        
+
+    func figureColor(_ figure: Figure) -> UIColor {
+        switch(figure.shape)
+        {
+        case .Beam:
+            return UIColor(hue: CGFloat(0.50), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+        case .J:
+            return UIColor(hue: CGFloat(0.57), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+        case .L:
+            return UIColor(hue: CGFloat(0.07), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+        case .S:
+            return UIColor(hue: CGFloat(0.32), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+        case .ReverseS:
+            return UIColor(hue: CGFloat(0.00), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+        case .Square:
+            return UIColor(hue: CGFloat(0.17), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+        case .Tee:
+            return UIColor(hue: CGFloat(0.78), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+        case .Undefined:
+            return UIColor.white
+        }
+    }
+
     func updateUI() {
         tetris.fieldWidth = field.width
         tetris.fieldHeight = field.height
         tetris.takenPositions.removeAll()
         
-        var blocks = Array<Block>()
+        tetris.takenPositions.removeAll()
         if let currentFigure = field.currentFigure {
-            blocks.append(contentsOf: currentFigure.blocks)
+            for block in currentFigure.blocks {
+                tetris.takenPositions[block] = figureColor(currentFigure)
+            }
         }
-        blocks += Array(field.oldFigures.keys)
-
-        for block in blocks {
-            let position = (x: block.x, y: block.y)
-            tetris.takenPositions += [position]
+        for (block, figure) in field.oldFigures {
+            tetris.takenPositions[block] = figureColor(figure)
         }
+        
         pauseButton.setTitle(field.inProgress() ? "Pause" : "Play", for: .normal)
         
         if field.gameOver && gameOverView == nil {

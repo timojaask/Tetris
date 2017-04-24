@@ -25,7 +25,7 @@ class TetrisView: UIView {
     var fieldHeight = 20
     var fieldWidth = 12
     
-    var takenPositions: [(x:Int,y:Int)] = [(4,5), (5,5), (6,5), (6,5)] {
+    var takenPositions: Dictionary<Block, UIColor> = [Block(x:4, y:5): UIColor.red, Block(x:5, y:5): UIColor.red, Block(x:6, y:5): UIColor.red, Block(x:6, y:6): UIColor.red] {
         didSet {
             setNeedsDisplay()
         }
@@ -58,7 +58,7 @@ class TetrisView: UIView {
         }
     }
     
-    private func drawBlock(positionX: Int, positionY: Int) {
+    private func drawBlock(positionX: Int, positionY: Int, color: UIColor) {
         let originX = (bounds.width - CGFloat(fieldWidth) * (blockSize + 2*margin))/2
         let originY = (bounds.height - CGFloat(fieldHeight) * (blockSize + 2*margin))/2
         
@@ -69,14 +69,16 @@ class TetrisView: UIView {
         let outerBlock = UIBezierPath(rect: outer)
         outerBlock.lineWidth = 1
         mainColor.setStroke()
+        color.setFill()
         outerBlock.stroke()
+        outerBlock.fill()
     }
     
     override func draw(_ rect: CGRect) {
         drawGrid()
         
-        for position in takenPositions {
-            drawBlock(positionX: position.x, positionY: position.y)
+        for (block, color) in takenPositions {
+            drawBlock(positionX: block.x, positionY: block.y, color: color)
         }
     }
 }
