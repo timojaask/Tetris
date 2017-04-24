@@ -19,8 +19,8 @@ class Field: NSObject {
     
     static let modelUpdateNotification = "dataModelDidUpdateNotification"
     
-    private(set) var width = 12
-    private(set) var height = 20
+    private(set) var width = 10
+    private(set) var height = 22
     
     private var stepInterval = 1.0
     

@@ -9,7 +9,7 @@ class TetrisView: UIView {
         if fieldWidth == 0 || fieldHeight == 0 {
             return 0
         } else {
-            return floor(0.9 * min(bounds.width / CGFloat(fieldWidth), bounds.height / CGFloat(fieldHeight)) - 2*margin)
+            return floor(0.98 * min(bounds.width / CGFloat(fieldWidth), bounds.height / CGFloat(fieldHeight)) - 2*margin)
         }
     }
     private var margin: CGFloat = 1.0
