@@ -15,6 +15,7 @@ class Field: NSObject {
 
         self.currentFigure = Figure(shape: .Undefined, field: self)
         spawnFigure()
+        readPileFromFile()
     }
     
     static let modelUpdateNotification = "dataModelDidUpdateNotification"
@@ -51,6 +52,7 @@ class Field: NSObject {
         }
         spawnFigure()
         oldFigures = [:]
+        readPileFromFile()
         fallingOldFigures = []
         gameOver = false
         nextStep()
@@ -311,6 +313,51 @@ class Field: NSObject {
 
     private func modelChanged() {
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: Field.modelUpdateNotification), object: nil)
+    }
+
+    private func readPileFromFile() {
+        let pileFile = ProcessInfo.processInfo.environment["PILE_FILE"]
+        if pileFile == nil {
+            return
+        }
+
+        let location = NSString(string: pileFile!).expandingTildeInPath
+        do {
+            let fileContent = try String(contentsOfFile: location)
+
+            var blocks = Dictionary<String, Array<Block>>()
+
+            let lines = fileContent.components(separatedBy: "\n").reversed()
+            var j = height-1
+            for line in lines {
+                var i = 0
+                for char in line.characters {
+                    if char != " " {
+                        if blocks[String(char)] == nil {
+                            blocks[String(char)] = Array<Block>()
+                        }
+                        let block = Block(x: i, y: j)
+                        assert(block.x < width && 0 < block.y && block.y < height)
+                        blocks[String(char)]!.append(block)
+                    }
+                    i += 1
+                }
+                j -= 1
+            }
+
+            for (_, arrayOfBlocks) in blocks {
+                let shapeIndex = arc4random_uniform(Figure.Shape.J.rawValue+1)
+                let shape = Figure.Shape(rawValue: shapeIndex)!
+
+                let figure = Figure(shape: shape, blocks: arrayOfBlocks, field: self)
+                for block in figure.blocks {
+                    oldFigures[block] = figure
+                }
+            }
+        }
+        catch {
+            print("Failed to read the pile")
+        }
     }
     
     private(set) var currentFigure: Figure!
