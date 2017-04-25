@@ -161,7 +161,7 @@ class Figure : CustomDebugStringConvertible
                 return false
             }
             let figureBelow = field.oldFigures[Block(x: block.x, y: block.y + 1)]
-            if figureBelow != nil && figureBelow !== self {
+            if figureBelow != nil && figureBelow !== self && !figureBelow!.isFloating() {
                 return false
             }
         }

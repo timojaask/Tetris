@@ -286,18 +286,21 @@ class Field: NSObject {
         }
         
         var checkedBlocks = Set<Block>()
-        
-        for figure in oldFigures.values {
-            let figureBlocks = Set(figure.blocks)
-            if !checkedBlocks.intersection(figureBlocks).isEmpty {
-                continue
+        for j in (0...height-1).reversed() {
+            for i in 0...width-1 {
+                if let figure = oldFigures[Block(x: i, y: j)] {
+                    let figureBlocks = Set(figure.blocks)
+                    if !checkedBlocks.intersection(figureBlocks).isEmpty {
+                        continue
+                    }
+
+                    if figure.isFloating() {
+                        fallingOldFigures.append(figure)
+                    }
+
+                    checkedBlocks = checkedBlocks.union(figureBlocks)
+                }
             }
-            
-            if figure.isFloating() {
-                fallingOldFigures.append(figure)
-            }
-            
-            checkedBlocks = checkedBlocks.union(figureBlocks)
         }
     }
     
