@@ -6,11 +6,12 @@ class Block : Hashable, CustomDebugStringConvertible {
         self.x = x
         self.y = y
     }
-    
-    var hashValue: Int {
-        return x.hashValue & y.hashValue
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
     }
-    
+
     var debugDescription: String {
         return "Block(\(x), \(y))"
     }

@@ -36,7 +36,7 @@ class ViewController: UIViewController {
         }
     }
 
-    func updateUI() {
+    @objc func updateUI() {
         tetris.fieldWidth = field.width
         tetris.fieldHeight = field.height
         tetris.takenPositions.removeAll()
@@ -54,7 +54,7 @@ class ViewController: UIViewController {
         pauseButton.setTitle(field.inProgress() ? "Pause" : "Play", for: .normal)
         
         if field.gameOver && gameOverView == nil {
-            let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.regular)
+            let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
             
             gameOverView = UIVisualEffectView(effect: blurEffect)
             gameOverView!.frame = self.view.bounds

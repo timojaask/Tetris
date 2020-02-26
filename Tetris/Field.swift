@@ -334,7 +334,7 @@ class Field: NSObject {
             var j = height-1
             for line in lines {
                 var i = 0
-                for char in line.characters {
+                for char in line {
                     if char != " " {
                         if blocks[String(char)] == nil {
                             blocks[String(char)] = Array<Block>()
