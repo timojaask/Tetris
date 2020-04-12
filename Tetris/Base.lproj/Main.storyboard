@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -22,7 +22,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q9L-Sg-z9M">
                                 <rect key="frame" x="140.5" y="530" width="39" height="30"/>
                                 <state key="normal" title="Reset">
-                                    <color key="titleColor" red="0.16278754340277779" green="0.16278754340277779" blue="0.16278754340277779" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleColor" red="0.16470588235294117" green="0.16470588235294117" blue="0.16470588235294117" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="reset:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NoO-Ub-ptv"/>
@@ -55,6 +55,12 @@
                                     <outletCollection property="gestureRecognizers" destination="xoB-Ws-86q" appends="YES" id="6if-IY-yfa"/>
                                 </connections>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fLc-I8-crg">
+                                <rect key="frame" x="16" y="535" width="11" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.16470588235294117" green="0.16470588235294117" blue="0.16470588235294117" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -62,15 +68,18 @@
                             <constraint firstItem="SW7-rg-vbC" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" id="7to-a4-FEC"/>
                             <constraint firstItem="SW7-rg-vbC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="HSW-NH-M8x"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="q9L-Sg-z9M" secondAttribute="bottom" constant="8" id="Q4d-hu-W1P"/>
+                            <constraint firstItem="fLc-I8-crg" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="ScJ-ls-9SP"/>
                             <constraint firstAttribute="trailingMargin" secondItem="SW7-rg-vbC" secondAttribute="trailing" id="Shs-mB-HyH"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="kxB-qC-kUn" secondAttribute="bottom" constant="8" id="VBq-uS-OLW"/>
                             <constraint firstItem="q9L-Sg-z9M" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="dXw-E5-7qj"/>
                             <constraint firstItem="q9L-Sg-z9M" firstAttribute="top" secondItem="SW7-rg-vbC" secondAttribute="bottom" constant="8" id="gqW-3B-MmN"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="fLc-I8-crg" secondAttribute="bottom" constant="12" id="z6f-o5-tel"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="panGestureRecognizer" destination="aVt-Wi-Ryy" id="Hz2-bI-wCs"/>
                         <outlet property="pauseButton" destination="kxB-qC-kUn" id="ALS-2i-pGx"/>
+                        <outlet property="scoreLabel" destination="fLc-I8-crg" id="we3-OI-BmL"/>
                         <outlet property="tetris" destination="SW7-rg-vbC" id="jRP-bY-E2W"/>
                     </connections>
                 </viewController>

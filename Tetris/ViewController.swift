@@ -8,6 +8,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var pauseButton: UIButton!
     
+    @IBOutlet weak var scoreLabel: UILabel!
+
     var field = Field()
     
     var gameOverView: UIView? = nil
@@ -52,6 +54,8 @@ class ViewController: UIViewController {
         }
         
         pauseButton.setTitle(field.inProgress() ? "Pause" : "Play", for: .normal)
+
+        scoreLabel.text = "\(field.score)"
         
         if field.gameOver && gameOverView == nil {
             let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)

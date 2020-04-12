@@ -26,6 +26,8 @@ class Field: NSObject {
     private var stepInterval = 1.0
     
     private var timer: Timer? = nil
+
+    var score = 0
     
     func nextStep() {
         if timer != nil {
@@ -50,6 +52,7 @@ class Field: NSObject {
         if inProgress() {
             timer!.invalidate()
         }
+        score = 0
         spawnFigure()
         oldFigures = [:]
         readPileFromFile()
@@ -301,6 +304,23 @@ class Field: NSObject {
                     checkedBlocks = checkedBlocks.union(figureBlocks)
                 }
             }
+        }
+
+        score = score + scoreForRemovedRows(numberOfRemovedRows: numberOfRemovedRows)
+    }
+
+    func scoreForRemovedRows(numberOfRemovedRows: Int) -> Int {
+        switch numberOfRemovedRows {
+        case 1:
+            return 40
+        case 2:
+            return 100
+        case 3:
+            return 300
+        case 4:
+            return 1200
+        default:
+            return 0
         }
     }
     
