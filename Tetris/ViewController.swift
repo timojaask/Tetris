@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 
     var field = Field()
     
-    var gameOverView: UIView? = nil
+    var gameOverView: UIVisualEffectView? = nil
 
     @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
 
@@ -72,7 +72,7 @@ class ViewController: UIViewController {
             label.font = UIFont.systemFont(ofSize: 35)
             label.frame = gameOverView!.bounds
             label.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            gameOverView!.addSubview(label)
+            gameOverView!.contentView.addSubview(label)
             
             let button = UIButton()
             button.setTitle("Start again", for: .normal)
@@ -80,7 +80,7 @@ class ViewController: UIViewController {
             button.sizeToFit()
             button.addTarget(self, action: #selector(reset), for: .touchUpInside)
             
-            gameOverView!.addSubview(button)
+            gameOverView!.contentView.addSubview(button)
             
             label.translatesAutoresizingMaskIntoConstraints = false
             button.translatesAutoresizingMaskIntoConstraints = false
