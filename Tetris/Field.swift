@@ -3,6 +3,49 @@
 
 import Foundation
 
+func blocksForShape(shape: Figure.Shape, centerX: Int, centerY: Int) -> [Block]? {
+    switch shape
+    {
+    case .S:
+        return [Block(x: centerX, y: centerY),
+                  Block(x: centerX,      y: centerY-1),
+                  Block(x: centerX+1,    y: centerY),
+                  Block(x: centerX+1,    y: centerY+1)]
+    case .ReverseS:
+        return [Block(x: centerX, y: centerY),
+                  Block(x: centerX+1,    y: centerY-1),
+                  Block(x: centerX+1,    y: centerY),
+                  Block(x: centerX,      y: centerY+1)]
+    case .Beam:
+        return [Block(x: centerX, y: centerY),
+                  Block(x: centerX,      y: centerY-1),
+                  Block(x: centerX,      y: centerY+1),
+                  Block(x: centerX,      y: centerY+2)]
+    case .Square:
+        return [Block(x: centerX,      y: centerY),
+                  Block(x: centerX+1,    y: centerY-1),
+                  Block(x: centerX+1,    y: centerY),
+                  Block(x: centerX,      y: centerY-1)]
+    case .Tee:
+        return [Block(x: centerX, y: centerY),
+                  Block(x: centerX-1,    y: centerY),
+                  Block(x: centerX,      y: centerY-1),
+                  Block(x: centerX+1,    y: centerY)]
+    case .L:
+        return [Block(x: centerX, y: centerY),
+                  Block(x: centerX,      y: centerY-1),
+                  Block(x: centerX,      y: centerY+1),
+                  Block(x: centerX+1,    y: centerY+1)]
+    case .J:
+        return [Block(x: centerX, y: centerY),
+                  Block(x: centerX,      y: centerY-1),
+                  Block(x: centerX,      y: centerY+1),
+                  Block(x: centerX-1,    y: centerY+1)]
+    case .Undefined:
+        return nil
+    }
+}
+
 class Field: NSObject {
     override init() {
         super.init()
@@ -14,7 +57,8 @@ class Field: NSObject {
         }
 
         self.currentFigure = Figure(shape: .Undefined, field: self)
-        spawnFigure()
+        nextShape = randomShape()
+        spawnFigure(shape: nextShape)
         readPileFromFile()
     }
     
@@ -53,7 +97,7 @@ class Field: NSObject {
             timer!.invalidate()
         }
         score = 0
-        spawnFigure()
+        spawnFigure(shape: nextShape)
         oldFigures = [:]
         readPileFromFile()
         fallingOldFigures = []
@@ -119,7 +163,7 @@ class Field: NSObject {
             if currentFigure == nil {
                 removeFilledRows()
                 if fallingOldFigures.isEmpty {
-                    spawnFigure()
+                    spawnFigure(shape: nextShape)
                 }                
             } else {
                 tryToMoveCurrentFigureDown()
@@ -160,14 +204,18 @@ class Field: NSObject {
         }
         fallingOldFigures = fallingOldFigures.filter { $0.canMoveDown() }
     }
-    
-    private func spawnFigure() {
-        dumpCurrentFigureIntoThePile()
-        
+
+    private func randomShape() -> Figure.Shape? {
         let shapeIndex = arc4random_uniform(Figure.Shape.J.rawValue+1)
+        return Figure.Shape(rawValue: shapeIndex)
+    }
+    
+    private func spawnFigure(shape: Figure.Shape?) {
+        dumpCurrentFigureIntoThePile()
+
         let centerX = width / 2 - 1
         let centerY = 1
-        if let shape = Figure.Shape(rawValue: shapeIndex) {
+        if let shape = shape {
             var blocks = Array<Block>()
 
             switch shape
@@ -219,6 +267,7 @@ class Field: NSObject {
             }
 
             currentFigure = Figure(shape: shape, blocks: blocks, field: self)
+            nextShape = randomShape()
         }
         
         for block in currentFigure.blocks {
@@ -382,7 +431,8 @@ class Field: NSObject {
             print("Failed to read the pile")
         }
     }
-    
+
+    private(set) var nextShape: Figure.Shape? = nil
     private(set) var currentFigure: Figure!
     private var currentFigureCenter: Block? = nil
     

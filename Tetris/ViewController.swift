@@ -3,6 +3,28 @@
 
 import UIKit
 
+func shapeColor(_ shape: Figure.Shape) -> UIColor {
+    switch(shape)
+    {
+    case .Beam:
+        return UIColor(hue: CGFloat(0.50), saturation: CGFloat(0.38), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
+    case .J:
+        return UIColor(hue: CGFloat(0.57), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+    case .L:
+        return UIColor(hue: CGFloat(0.07), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+    case .S:
+        return UIColor(hue: CGFloat(0.32), saturation: CGFloat(0.40), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
+    case .ReverseS:
+        return UIColor(hue: CGFloat(0.00), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+    case .Square:
+        return UIColor(hue: CGFloat(0.17), saturation: CGFloat(0.50), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
+    case .Tee:
+        return UIColor(hue: CGFloat(0.78), saturation: CGFloat(0.40), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
+    case .Undefined:
+        return UIColor.white
+    }
+}
+
 class ViewController: UIViewController {
     @IBOutlet weak var tetris: TetrisView! 
     
@@ -10,33 +32,15 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var scoreLabel: UILabel!
 
+    @IBOutlet weak var nextShapeView: NextShapeView!
+
     var field = Field()
     
     var gameOverView: UIVisualEffectView? = nil
 
     @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
 
-    func figureColor(_ figure: Figure) -> UIColor {
-        switch(figure.shape)
-        {
-        case .Beam:
-            return UIColor(hue: CGFloat(0.50), saturation: CGFloat(0.38), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
-        case .J:
-            return UIColor(hue: CGFloat(0.57), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
-        case .L:
-            return UIColor(hue: CGFloat(0.07), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
-        case .S:
-            return UIColor(hue: CGFloat(0.32), saturation: CGFloat(0.40), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
-        case .ReverseS:
-            return UIColor(hue: CGFloat(0.00), saturation: CGFloat(0.54), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
-        case .Square:
-            return UIColor(hue: CGFloat(0.17), saturation: CGFloat(0.50), brightness: CGFloat(0.95), alpha: CGFloat(1.0))
-        case .Tee:
-            return UIColor(hue: CGFloat(0.78), saturation: CGFloat(0.40), brightness: CGFloat(1.0), alpha: CGFloat(1.0))
-        case .Undefined:
-            return UIColor.white
-        }
-    }
+
 
     @objc func updateUI() {
         tetris.fieldWidth = field.width
@@ -46,12 +50,13 @@ class ViewController: UIViewController {
         tetris.takenPositions.removeAll()
         if let currentFigure = field.currentFigure {
             for block in currentFigure.blocks {
-                tetris.takenPositions[block] = figureColor(currentFigure)
+                tetris.takenPositions[block] = shapeColor(currentFigure.shape)
             }
         }
         for (block, figure) in field.oldFigures {
-            tetris.takenPositions[block] = figureColor(figure)
+            tetris.takenPositions[block] = shapeColor(figure.shape)
         }
+        nextShapeView.shape = field.nextShape
         
         pauseButton.setTitle(field.inProgress() ? "Pause" : "Play", for: .normal)
 
